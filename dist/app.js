@@ -1,8 +1,20 @@
-/* Cantinho de Estudos da Lari: motor principal */
+/* Cantinho de Estudos da Lari: motor principal corrigido */
 const DB_NAME = 'cantinho-da-lari-v1';
 const DB_VERSION = 1;
 const $ = s => document.querySelector(s);
-const escapeHTML = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function escapeHTML(s) {
+  return String(s ?? '').replace(/[&<>"']/g, function(c) {
+    switch (c) {
+      case '&': return '&amp;';
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '"': return '&quot;';
+      case "'": return '&#39;';
+      default: return c;
+    }
+  });
+}
 
 const state = {
   view: 'overview',
@@ -34,7 +46,7 @@ const views = {
 };
 
 function dbOpen() {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     try {
       const req = indexedDB.open(DB_NAME, DB_VERSION);
       req.onupgradeneeded = () => {
@@ -113,17 +125,52 @@ function sourceLink(q) {
     : `<span>${escapeHTML(q?.source?.title || 'Material da disciplina')}${q?.source?.locator ? ' · ' + escapeHTML(q.source.locator) : ''}</span>`;
 }
 
+function renderTopicRows(topicItems) {
+  if (!topicItems || !topicItems.length) {
+    return '<p class="empty-message">Ao resolver questões objetivas, você verá os acertos em cada assunto.</p>';
+  }
+  return topicItems.map(t => {
+    const w = t.done ? Math.round(t.right / t.done * 100) : 0;
+    return `<div class="topic-row"><b>${escapeHTML(t.name)}</b><div class="progress-track"><i style="width:${w}%"></i></div><em>${pct(t.right, t.done)}</em></div>`;
+  }).join('');
+}
+
+function renderReviewList(miss) {
+  if (!miss || !miss.length) {
+    return '<p class="empty-message">As leituras recomendadas para questões erradas aparecem aqui.</p>';
+  }
+  return miss.slice(0, 3).map(x => {
+    const topic = escapeHTML(x.question?.topic || '');
+    const prompt = escapeHTML(x.question?.prompt || '');
+    const reading = escapeHTML(x.question?.reading || 'Revise a explicação da questão.');
+    return `<div class="review-item"><strong>${topic} · ${prompt}</strong><small>${reading}</small></div>`;
+  }).join('');
+}
+
 function renderOverview() {
   const qs = Array.isArray(state.questions) ? state.questions : [];
   const arts = Array.isArray(state.articles) ? state.articles : [];
-  const first = firstAttempts(), week = first.filter(inCurrentWeek), objWeek = objectiveFirst().filter(inCurrentWeek), correct = objWeek.filter(a => a.correct).length, goal = Math.max(1, Number(state.profile.goal) || 10), miss = unresolvedErrors();
+  const first = firstAttempts();
+  const week = first.filter(inCurrentWeek);
+  const objWeek = objectiveFirst().filter(inCurrentWeek);
+  const correct = objWeek.filter(a => a.correct).length;
+  const goal = Math.max(1, Number(state.profile.goal) || 10);
+  const miss = unresolvedErrors();
+
   const topicItems = [...new Set(qs.map(q => q?.topic).filter(Boolean))].map(t => {
-    const tqs = new Set(qs.filter(q => q.topic === t).map(q => q.id)), all = objectiveFirst().filter(a => tqs.has(a.questionId));
+    const tqs = new Set(qs.filter(q => q.topic === t).map(q => q.id));
+    const all = objectiveFirst().filter(a => tqs.has(a.questionId));
     return { name: t, done: all.length, right: all.filter(a => a.correct).length };
   }).filter(t => t.done).sort((a, b) => a.right / a.done - b.right / b.done).slice(0, 4);
-  const mins = Object.entries(state.time || {}).filter(([d]) => { try { return weekKey(new Date(d + 'T12:00:00')) === weekKey(); } catch (e) { return false; } }).reduce((s, [, v]) => s + v, 0);
 
-  return `${header(`Olá${state.profile.name ? ', ' + escapeHTML(state.profile.name) : ''}.`, `Seu estudo de Fitoplâncton com foco e acompanhamento.`, `<button class="btn" data-action="start">Resolver questões <span aria-hidden="true">→</span></button>`)}${notice()}
+  const mins = Object.entries(state.time || {}).filter(([d]) => {
+    try { return weekKey(new Date(d + 'T12:00:00')) === weekKey(); } catch (e) { return false; }
+  }).reduce((s, [, v]) => s + v, 0);
+
+  const nameTxt = state.profile.name ? `, ${escapeHTML(state.profile.name)}` : '';
+  const headHtml = header(`Olá${nameTxt}.`, 'Seu estudo de Fitoplâncton com foco e acompanhamento.', '<button class="btn" data-action="start">Resolver questões <span aria-hidden="true">→</span></button>');
+
+  return `${headHtml}${notice()}
   <div class="overview-grid">
     <section class="feature panel">
       <p class="eyebrow">ESTUDO ATIVO</p>
@@ -148,12 +195,12 @@ function renderOverview() {
   <div class="split-grid">
     <section class="section-panel panel">
       <div class="section-head"><h2>Desempenho por assunto</h2><button class="text-link" data-action="go-results">Ver resultados →</button></div>
-      ${topicItems.length ? topicItems.map(t => `<div class="topic-row"><b>${escapeHTML(t.name)}</b><div class="progress-track"><i style="width:${t.right / t.done * 100}\%"></i></div><em>${pct(t.right, t.done)}</em></div>`).join('') : '<p class="empty-message">Ao resolver questões objetivas, você verá os acertos em cada assunto.</p>'}
+      ${renderTopicRows(topicItems)}
     </section>
     <section class="section-panel panel">
       <div class="section-head"><h2>Retomar a leitura</h2><button class="text-link" data-action="go-errors">Caderno de erros →</button></div>
       <div class="review-list">
-        ${miss.length ? miss.slice(0, 3).map(x => `<div class="review-item"><strong>${escapeHTML(x.question?.topic || '')} · ${escapeHTML(x.question?.prompt \vert{}\vert{} '')}</strong><small>${escapeHTML(x.question?.reading || 'Revise a explicação da questão.')}</small></div>`).join('') : '<p class="empty-message">As leituras recomendadas para questões erradas aparecem aqui.</p>'}
+        ${renderReviewList(miss)}
       </div>
     </section>
   </div>`;
@@ -161,7 +208,8 @@ function renderOverview() {
 
 function filteredArticles() {
   const arts = Array.isArray(state.articles) ? state.articles : [];
-  const f = state.libraryFilter, q = (f.query || '').trim().toLowerCase();
+  const f = state.libraryFilter;
+  const q = (f.query || '').trim().toLowerCase();
   return arts.filter(a => {
     if (!a) return false;
     const matchCat = f.category === 'Todas' || a.categoria === f.category;
@@ -180,44 +228,49 @@ function renderLibrary() {
   const categories = ['Todas', ...new Set(arts.map(a => a?.categoria).filter(Boolean))];
   const list = filteredArticles();
 
+  const optionsHtml = categories.map(c => {
+    const sel = state.libraryFilter.category === c ? 'selected' : '';
+    const label = c === 'Todas' ? 'Todas as categorias' : c;
+    return `<option value="${escapeHTML(c)}" ${sel}>${escapeHTML(label)}</option>`;
+  }).join('');
+
+  let cardsHtml = '';
+  if (list.length) {
+    cardsHtml = `<div class="articles-list">${list.map(a => {
+      const kwHtml = (a.palavras_chave || []).map(k => `<span class="keyword-tag">#${escapeHTML(k)}</span>`).join('');
+      return `<article class="article-card panel">
+        <div class="article-header">
+          <h2>${escapeHTML(a.titulo || '')}</h2>
+          <span class="badge">${escapeHTML(a.categoria || 'Geral')}</span>
+        </div>
+        <div class="article-source">Fonte: ${escapeHTML(a.autor_fonte || 'Apostila')}</div>
+        <div class="article-body">${escapeHTML(a.resumo || '')}</div>
+        <div class="article-keywords">${kwHtml}</div>
+      </article>`;
+    }).join('')}</div>`;
+  } else {
+    cardsHtml = `<div class="empty-state panel">
+      <h2>Nenhum resultado encontrado para "${escapeHTML(state.libraryFilter.query)}".</h2>
+      <button class="btn light" data-action="clear-library-filter">Limpar busca</button>
+    </div>`;
+  }
+
   return `${header('Biblioteca & Artigos de Fitoplâncton', 'Pesquise por conceitos, estruturas morfológicas, autores e florações.')}${notice()}
   <div class="toolbar">
     <input class="field search-field" type="search" id="article-search" placeholder="Pesquisar por frústula, sílica, maré vermelha, Alexandrium..." value="${escapeHTML(state.libraryFilter.query)}" aria-label="Pesquisar artigos" />
-    <select class="field" id="article-category-filter" aria-label="Filtrar por categoria">
-      ${categories.map(c => `<option value="${escapeHTML(c)}" ${state.libraryFilter.category === c ? 'selected' : ''}>${escapeHTML(c === 'Todas' ? 'Todas as categorias' : c)}</option>`).join('')}
-    </select>
+    <select class="field" id="article-category-filter" aria-label="Filtrar por categoria">${optionsHtml}</select>
   </div>
   <div class="filters-foot">
     <span>${list.length} ${list.length === 1 ? 'artigo/resumo encontrado' : 'artigos/resumos encontrados'}</span>
     <span>Dica: Use palavras-chave curtas para encontrar trechos exatos</span>
   </div>
-  ${list.length ? `
-    <div class="articles-list">
-      ${list.map(a => `
-        <article class="article-card panel">
-          <div class="article-header">
-            <h2>${escapeHTML(a.titulo || '')}</h2>
-            <span class="badge">${escapeHTML(a.categoria || 'Geral')}</span>
-          </div>
-          <div class="article-source">Fonte: ${escapeHTML(a.autor_fonte || 'Apostila')}</div>
-          <div class="article-body">${escapeHTML(a.resumo || '')}</div>
-          <div class="article-keywords">
-            ${(a.palavras_chave || []).map(k => `<span class="keyword-tag">#${escapeHTML(k)}</span>`).join('')}
-          </div>
-        </article>
-      `).join('')}
-    </div>
-  ` : `
-    <div class="empty-state panel">
-      <h2>Nenhum resultado encontrado para "${escapeHTML(state.libraryFilter.query)}".</h2>
-      <button class="btn light" data-action="clear-library-filter">Limpar busca</button>
-    </div>
-  `}`;
+  ${cardsHtml}`;
 }
 
 function filteredQuestions() {
   const qs = Array.isArray(state.questions) ? state.questions : [];
-  const f = state.filter, q = (f.query || '').trim().toLocaleLowerCase('pt-BR');
+  const f = state.filter;
+  const q = (f.query || '').trim().toLocaleLowerCase('pt-BR');
   return qs.filter(x => x && (f.type === 'all' || x.type === f.type) && (f.topic === 'Todos' || x.topic === f.topic) && (!q || [x.id, x.topic, x.prompt].some(s => String(s || '').toLocaleLowerCase('pt-BR').includes(q))));
 }
 
@@ -233,21 +286,62 @@ function nextQuestion(review = false) {
 
 function renderPractice() {
   const qs = Array.isArray(state.questions) ? state.questions : [];
-  const topics = ['Todos', ...new Set(qs.map(q => q?.topic).filter(Boolean))], pool = filteredQuestions(), unseen = pool.filter(q => !answeredIds().has(q.id));
+  const topics = ['Todos', ...new Set(qs.map(q => q?.topic).filter(Boolean))];
+  const pool = filteredQuestions();
+  const unseen = pool.filter(q => !answeredIds().has(q.id));
+
   if (state.question && !pool.some(q => q && q.id === state.question.id)) state.question = null;
   if (!state.question && unseen.length) nextQuestion();
   const q = state.question;
+
+  const topicsHtml = topics.map(t => {
+    const sel = state.filter.topic === t ? 'selected' : '';
+    const label = t === 'Todos' ? 'Todos os assuntos' : t;
+    return `<option value="${escapeHTML(t)}" ${sel}>${escapeHTML(label)}</option>`;
+  }).join('');
+
+  if (!q) {
+    const emptyBtnAction = pool.length ? 'go-errors' : 'clear-filter';
+    const emptyBtnLabel = pool.length ? 'Revisar erros' : 'Limpar filtros';
+    const emptyTitle = pool.length ? 'Você concluiu as questões inéditas deste filtro.' : 'Nenhuma questão neste filtro.';
+
+    return `${header('Resolver questões', 'Busque por número, texto ou assunto.')}${notice()}
+    <div class="toolbar">
+      <input class="field search-field" type="search" id="question-search" placeholder="Buscar assunto ou questão..." value="${escapeHTML(state.filter.query)}" />
+      <select class="field" id="topic-filter">${topicsHtml}</select>
+      <select class="field" id="type-filter">
+        <option value="multiple" ${state.filter.type === 'multiple' ? 'selected' : ''}>Múltipla escolha</option>
+        <option value="open" ${state.filter.type === 'open' ? 'selected' : ''}>Discursivas</option>
+        <option value="all" ${state.filter.type === 'all' ? 'selected' : ''}>Todos os tipos</option>
+      </select>
+    </div>
+    <div class="empty-state panel">
+      <h2>${emptyTitle}</h2>
+      <button class="btn light" data-action="${emptyBtnAction}">${emptyBtnLabel}</button>
+    </div>`;
+  }
+
+  const questionBody = q.type === 'multiple' ? renderMultiple(q) : renderOpen(q);
+
   return `${header('Resolver questões', 'Busque por número, texto ou assunto. O sorteio usa questões inéditas primeiro.')}${notice()}
   <div class="toolbar">
-    <input class="field search-field" type="search" id="question-search" placeholder="Buscar assunto ou questão..." value="${escapeHTML(state.filter.query)}" aria-label="Buscar questão" />
-    <select class="field" id="topic-filter" aria-label="Filtrar assunto">${topics.map(t => `<option value="${escapeHTML(t)}" ${state.filter.topic === t ? 'selected' : ''}>${escapeHTML(t === 'Todos' ? 'Todos os assuntos' : t)}</option>`).join('')}</select>
-    <select class="field" id="type-filter" aria-label="Filtrar tipo"><option value="multiple" ${state.filter.type === 'multiple' ? 'selected' : ''}>Múltipla escolha</option><option value="open" ${state.filter.type === 'open' ? 'selected' : ''}>Discursivas</option><option value="all" ${state.filter.type === 'all' ? 'selected' : ''}>Todos os tipos</option></select>
+    <input class="field search-field" type="search" id="question-search" placeholder="Buscar assunto ou questão..." value="${escapeHTML(state.filter.query)}" />
+    <select class="field" id="topic-filter">${topicsHtml}</select>
+    <select class="field" id="type-filter">
+      <option value="multiple" ${state.filter.type === 'multiple' ? 'selected' : ''}>Múltipla escolha</option>
+      <option value="open" ${state.filter.type === 'open' ? 'selected' : ''}>Discursivas</option>
+      <option value="all" ${state.filter.type === 'all' ? 'selected' : ''}>Todos os tipos</option>
+    </select>
   </div>
-  <div class="filters-foot"><span>${pool.length} ${pool.length === 1 ? 'questão encontrada' : 'questões encontradas'} · ${unseen.length} inéditas</span><span>Revisões ficam no caderno de erros</span></div>
-  ${q ? `<div class="question-layout">
+  <div class="filters-foot">
+    <span>${pool.length} ${pool.length === 1 ? 'questão encontrada' : 'questões encontradas'} · ${unseen.length} inéditas</span>
+    <span>Revisões ficam no caderno de erros</span>
+  </div>
+  <div class="question-layout">
     <section class="question-card panel">
       <div class="question-meta"><span class="badge">${escapeHTML(q.topic || '')}</span><span class="badge warm">${escapeHTML(q.difficulty || 'Sem nível')}</span><span class="question-id">${escapeHTML(q.id || '')}</span></div>
-      <h2>${escapeHTML(q.prompt \vert{}\vert{} '')}</h2>${q.type === 'multiple' ? renderMultiple(q) : renderOpen(q)}
+      <h2>${escapeHTML(q.prompt || '')}</h2>
+      ${questionBody}
     </section>
     <aside class="context-card panel">
       <h3>Sua prática</h3>
@@ -256,24 +350,52 @@ function renderPractice() {
       <div class="mini-stat"><span>Ainda inéditas</span><b>${unseen.length}</b></div>
       <div class="mini-stat"><span>Para revisar</span><b>${unresolvedErrors().length}</b></div>
     </aside>
-  </div>` : `<div class="empty-state panel"><h2>${pool.length ? 'Você concluiu as questões inéditas deste filtro.' : 'Nenhuma questão neste filtro.'}</h2><button class="btn light" data-action="${pool.length ? 'go-errors' : 'clear-filter'}">${pool.length ? 'Revisar erros' : 'Limpar filtros'}</button></div>`}`;
+  </div>`;
 }
 
 function renderMultiple(q) {
   const opts = Array.isArray(q?.options) ? q.options : [];
-  return `<div class="choices" role="group" aria-label="Alternativas">
-    ${opts.map((opt, i) => `<button type="button" class="choice ${state.selected === i ? 'selected' : ''} ${state.submitted ? (i === q.answer ? 'correct' : state.selected === i ? 'wrong' : '') : ''}" data-action="choose" data-index="${i}" ${state.submitted ? 'disabled' : ''}><span class="choice-letter">${'ABCD'[i] \vert{}\vert{} i + 1}</span><span>${escapeHTML(opt)}</span></button>`).join('')}
-  </div>
-  ${state.submitted ? feedback(q, state.selected === q.answer) : ''}
-  <div class="question-actions">
-    ${!state.submitted ? '<button class="btn" data-action="submit-choice" ' + (state.selected === null ? 'disabled' : '') + '>Corrigir resposta</button>' : '<button class="btn" data-action="next">Próxima questão →</button>'}
-  </div>`;
+  const choicesHtml = opts.map((opt, i) => {
+    let cls = 'choice';
+    if (state.selected === i) cls += ' selected';
+    if (state.submitted) {
+      if (i === q.answer) cls += ' correct';
+      else if (state.selected === i) cls += ' wrong';
+    }
+    const disabled = state.submitted ? 'disabled' : '';
+    const letter = 'ABCD'[i] || (i + 1);
+    return `<button type="button" class="${cls}" data-action="choose" data-index="${i}" ${disabled}><span class="choice-letter">${letter}</span><span>${escapeHTML(opt)}</span></button>`;
+  }).join('');
+
+  const feedbackHtml = state.submitted ? feedback(q, state.selected === q.answer) : '';
+  const actionBtn = !state.submitted
+    ? `<button class="btn" data-action="submit-choice" ${state.selected === null ? 'disabled' : ''}>Corrigir resposta</button>`
+    : `<button class="btn" data-action="next">Próxima questão →</button>`;
+
+  return `<div class="choices" role="group" aria-label="Alternativas">${choicesHtml}</div>${feedbackHtml}<div class="question-actions">${actionBtn}</div>`;
 }
 
 function renderOpen(q) {
   const crits = Array.isArray(q?.criteria) ? q.criteria : [];
-  return `<textarea class="answer-box" id="open-answer" placeholder="Escreva sua resposta antes de consultar o modelo..." aria-label="Sua resposta" ${state.showModel ? 'readonly' : ''}>${escapeHTML(state.openText)}</textarea>
-  ${!state.showModel ? '<div class="question-actions"><button class="btn" data-action="show-model">Comparar com o modelo</button></div>' : `<div class="feedback"><h3>Resposta de referência</h3><p>${escapeHTML(q?.model || '')}</p><p class="reading"><strong>Onde reler:</strong> ${escapeHTML(q?.reading || '')}<br />${sourceLink(q)}</p></div>${state.submitted ? '<div class="feedback"><h3>Autoavaliação salva.</h3><p>Veja a nota no histórico.</p></div><div class="question-actions"><button class="btn" data-action="next">Próxima questão →</button></div>' : `<div class="model-box"><strong>Autoavaliação</strong><p>Marque os pontos explicados corretamente:</p><div class="self-check">${crits.map((c, i) => `<label><input type="checkbox" data-criterion="${i}" /><span>${escapeHTML(c)}</span></label>`).join('')}</div><strong id="self-score">0 de 10 pontos</strong></div><div class="question-actions"><button class="btn" data-action="save-open">Salvar autoavaliação</button></div>`}`}`;
+  const answerVal = escapeHTML(state.openText);
+  const readonly = state.showModel ? 'readonly' : '';
+  let bottomHtml = '';
+
+  if (!state.showModel) {
+    bottomHtml = '<div class="question-actions"><button class="btn" data-action="show-model">Comparar com o modelo</button></div>';
+  } else {
+    const refHtml = `<div class="feedback"><h3>Resposta de referência</h3><p>${escapeHTML(q?.model || '')}</p><p class="reading"><strong>Onde reler:</strong> ${escapeHTML(q?.reading || '')}<br />${sourceLink(q)}</p></div>`;
+    let evalHtml = '';
+    if (state.submitted) {
+      evalHtml = '<div class="feedback"><h3>Autoavaliação salva.</h3><p>Veja a nota no histórico.</p></div><div class="question-actions"><button class="btn" data-action="next">Próxima questão →</button></div>';
+    } else {
+      const checksHtml = crits.map((c, i) => `<label><input type="checkbox" data-criterion="${i}" /><span>${escapeHTML(c)}</span></label>`).join('');
+      evalHtml = `<div class="model-box"><strong>Autoavaliação</strong><p>Marque os pontos explicados corretamente:</p><div class="self-check">${checksHtml}</div><strong id="self-score">0 de 10 pontos</strong></div><div class="question-actions"><button class="btn" data-action="save-open">Salvar autoavaliação</button></div>`;
+    }
+    bottomHtml = refHtml + evalHtml;
+  }
+
+  return `<textarea class="answer-box" id="open-answer" placeholder="Escreva sua resposta antes de consultar o modelo..." aria-label="Sua resposta" ${readonly}>${answerVal}</textarea>${bottomHtml}`;
 }
 
 function feedback(q, correct) {
@@ -282,15 +404,59 @@ function feedback(q, correct) {
 
 function renderErrors() {
   const errors = unresolvedErrors();
-  return `${header('Caderno de erros', 'Cada item guarda a explicação e o caminho de leitura.')}${notice()}
-  ${errors.length ? `<div class="panel section-panel"><div class="section-head"><h2>${errors.length}${errors.length === 1 ? 'questão pendente' : 'questões pendentes'}</h2><span class="badge warm">Revisão dirigida</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Questão</th><th>Onde reler</th><th>Última tentativa</th><th></th></tr></thead><tbody>${errors.map(({ question: q, attempt: a }) => `<tr><td><strong>${escapeHTML(q?.prompt || '')}</strong><small>${escapeHTML(q?.topic || '')} · ${escapeHTML(q?.id || '')}</small></td><td>${escapeHTML(q?.reading || 'Consulte a explicação.')}</td><td>${fmtDate(a?.at)}</td><td><button class="btn light" data-action="retry" data-id="${escapeHTML(q?.id || '')}">Refazer</button></td></tr>`).join('')}</tbody></table></div></div>` : `<div class="empty-state panel"><h2>Nenhuma questão pendente de revisão.</h2><button class="btn" data-action="start">Resolver questões</button></div>`}`;
+  let content = '';
+  if (errors.length) {
+    const rows = errors.map(({ question: q, attempt: a }) => {
+      return `<tr>
+        <td><strong>${escapeHTML(q?.prompt || '')}</strong><small>${escapeHTML(q?.topic || '')} · ${escapeHTML(q?.id || '')}</small></td>
+        <td>${escapeHTML(q?.reading || 'Consulte a explicação.')}</td>
+        <td>${fmtDate(a?.at)}</td>
+        <td><button class="btn light" data-action="retry" data-id="${escapeHTML(q?.id || '')}">Refazer</button></td>
+      </tr>`;
+    }).join('');
+    content = `<div class="panel section-panel"><div class="section-head"><h2>${errors.length} ${errors.length === 1 ? 'questão pendente' : 'questões pendentes'}</h2><span class="badge warm">Revisão dirigida</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Questão</th><th>Onde reler</th><th>Última tentativa</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  } else {
+    content = `<div class="empty-state panel"><h2>Nenhuma questão pendente de revisão.</h2><button class="btn" data-action="start">Resolver questões</button></div>`;
+  }
+  return `${header('Caderno de erros', 'Cada item guarda a explicação e o caminho de leitura.')}${notice()}${content}`;
 }
 
 function renderResults() {
   const qs = Array.isArray(state.questions) ? state.questions : [];
-  const first = firstAttempts(), objective = objectiveFirst(), right = objective.filter(a => a.correct).length;
-  const byTopic = [...new Set(qs.map(q => q?.topic).filter(Boolean))].map(t => { const ids = new Set(qs.filter(q => q.topic === t).map(q => q.id)), a = objective.filter(x => ids.has(x.questionId)); return { topic: t, total: a.length, right: a.filter(x => x.correct).length }; });
-  const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() - 6 + i); const date = keyDay(d), items = first.filter(a => keyDay(new Date(a.at)) === date); return { date, label: new Intl.DateTimeFormat('pt-BR', { weekday: 'short' }).format(d).replace('.', ''), total: items.length, right: items.filter(a => a.correct).length }; });
+  const first = firstAttempts();
+  const objective = objectiveFirst();
+  const right = objective.filter(a => a.correct).length;
+
+  const byTopic = [...new Set(qs.map(q => q?.topic).filter(Boolean))].map(t => {
+    const ids = new Set(qs.filter(q => q.topic === t).map(q => q.id));
+    const a = objective.filter(x => ids.has(x.questionId));
+    return { topic: t, total: a.length, right: a.filter(x => x.correct).length };
+  });
+
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - 6 + i);
+    const date = keyDay(d);
+    const items = first.filter(a => keyDay(new Date(a.at)) === date);
+    return {
+      date: date,
+      label: new Intl.DateTimeFormat('pt-BR', { weekday: 'short' }).format(d).replace('.', ''),
+      total: items.length
+    };
+  });
+
+  const maxDay = Math.max(1, ...days.map(x => x.total));
+  const trendHtml = days.map(d => {
+    const height = Math.max(3, Math.round(d.total / maxDay * 110));
+    return `<div class="trend-col"><strong>${d.total || ''}</strong><div class="trend-bar" style="height:${height}px"></div><span>${d.label}</span></div>`;
+  }).join('');
+
+  const topicRows = byTopic.filter(t => t.total).map(t => {
+    const pctVal = pct(t.right, t.total);
+    const w = Math.round(t.right / t.total * 100);
+    return `<div class="topic-row"><b>${escapeHTML(t.topic)}</b><div class="progress-track"><i style="width:${w}%"></i></div><em title="${t.right} de ${t.total}">${pctVal}</em></div>`;
+  }).join('');
+
   const totalTime = Object.values(state.time || {}).reduce((a, b) => a + b, 0);
 
   return `${header('Resultados', 'Estatísticas das questões objetivas inéditas.')}${notice()}
@@ -301,16 +467,38 @@ function renderResults() {
     <section class="stat panel"><span class="label">TEMPO REGISTRADO</span><strong>${fmtTime(totalTime)}</strong><small>Tempo ativo</small></section>
   </div>
   <div class="split-grid">
-    <section class="section-panel panel"><div class="section-head"><h2>Acertos por assunto</h2><span class="label">OBJETIVAS</span></div>${byTopic.filter(t => t.total).length ? byTopic.filter(t => t.total).map(t => `<div class="topic-row"><b>${escapeHTML(t.topic)}</b><div class="progress-track"><i style="width:${t.right / t.total * 100}%"></i></div><em title="${t.right} de ${t.total}">${pct(t.right, t.total)}</em></div>`).join('') : '<p class="empty-message">Ainda não há respostas.</p>'}</section>
-    <section class="section-panel panel"><div class="section-head"><h2>Últimos 7 dias</h2><span class="label">INÉDITAS</span></div><div class="trend">${days.map(d => `<div class="trend-col"><strong>${d.total || ''}</strong><div class="trend-bar" style="height:${Math.max(3, d.total / Math.max(1, ...days.map(x => x.total)) * 110)}px"></div><span>${d.label}</span></div>`).join('')}</div></section>
+    <section class="section-panel panel">
+      <div class="section-head"><h2>Acertos por assunto</h2><span class="label">OBJETIVAS</span></div>
+      ${topicRows || '<p class="empty-message">Ainda não há respostas.</p>'}
+    </section>
+    <section class="section-panel panel">
+      <div class="section-head"><h2>Últimos 7 dias</h2><span class="label">INÉDITAS</span></div>
+      <div class="trend">${trendHtml}</div>
+    </section>
   </div>`;
 }
 
 function renderHistory() {
   const qs = Array.isArray(state.questions) ? state.questions : [];
   const list = [...currentAttempts()].sort((a, b) => (b.at || '').localeCompare(a.at || ''));
-  return `${header('Histórico', 'Todas as tentativas registradas neste navegador.')}${notice()}
-  ${list.length ? `<div class="section-panel panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Quando</th><th>Questão</th><th>Resultado</th><th>Tentativa</th></tr></thead><tbody>${list.map(a => { const q = qs.find(x => x && x.id === a.questionId); return `<tr><td>${fmtDate(a.at)}</td><td><strong>${escapeHTML(q?.prompt || a.questionId)}</strong><small>${escapeHTML(q?.topic || 'Questão')}</small></td><td><span class="badge ${a.correct ? '' : 'red'}">${a.type === 'open' ? `${a.score}/10 · autoavaliação` : a.correct ? 'Acertou' : 'Errou'}</span></td><td>${a.first ? 'Primeira' : 'Revisão'}</td></tr>`; }).join('')}</tbody></table></div></div>` : '<div class="empty-state panel"><h2>Seu histórico começa na primeira resposta.</h2><button class="btn" data-action="start">Começar</button></div>'}`;
+  let content = '';
+  if (list.length) {
+    const rows = list.map(a => {
+      const q = qs.find(x => x && x.id === a.questionId);
+      const label = a.type === 'open' ? `${a.score}/10 · autoavaliação` : (a.correct ? 'Acertou' : 'Errou');
+      const badgeCls = a.correct ? '' : 'red';
+      return `<tr>
+        <td>${fmtDate(a.at)}</td>
+        <td><strong>${escapeHTML(q?.prompt || a.questionId)}</strong><small>${escapeHTML(q?.topic || 'Questão')}</small></td>
+        <td><span class="badge ${badgeCls}">${label}</span></td>
+        <td>${a.first ? 'Primeira' : 'Revisão'}</td>
+      </tr>`;
+    }).join('');
+    content = `<div class="section-panel panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Quando</th><th>Questão</th><th>Resultado</th><th>Tentativa</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+  } else {
+    content = '<div class="empty-state panel"><h2>Seu histórico começa na primeira resposta.</h2><button class="btn" data-action="start">Começar</button></div>';
+  }
+  return `${header('Histórico', 'Todas as tentativas registradas neste navegador.')}${notice()}${content}`;
 }
 
 function renderSettings() {
@@ -502,7 +690,6 @@ $('#menu-toggle')?.addEventListener('click', () => {
   $('#menu-toggle')?.setAttribute('aria-expanded', String(open));
 });
 
-/* Tutor IA */
 function appendChatMessage(text, sender = 'bot') {
   const box = $('#ai-widget-messages');
   if (!box) return null;
@@ -520,7 +707,7 @@ async function askGemini(query) {
     const arts = Array.isArray(state.articles) ? state.articles : [];
     const match = arts.find(a => (a.titulo || '').toLowerCase().includes(q) || (a.resumo || '').toLowerCase().includes(q) || (Array.isArray(a.palavras_chave) && a.palavras_chave.some(k => q.includes(String(k).toLowerCase()))));
     if (match) return `Encontrei uma referência em "${match.titulo}":\n\n${match.resumo}\n\n(Para ter respostas com raciocínio completo de IA, adicione a sua chave do Gemini em "Meu plano e dados")`;
-    return `Para ter respostas com raciocínio e síntese completa de IA, ative a chave gratuita do Gemini na aba "Meu plano e dados".`;
+    return 'Para ter respostas com raciocínio e síntese completa de IA, ative a chave gratuita do Gemini na aba "Meu plano e dados".';
   }
 
   const prompt = `Você é o Tutor de Fitoplâncton no site "Cantinho de Estudos da Lari".
@@ -535,7 +722,8 @@ ${JSON.stringify(state.articles || [], null, 2)}
 Dúvida ou questão da Lari: "${query}"`;
 
   try {
-    const res = await fetch(`[https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$](https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$){encodeURIComponent(state.geminiKey)}`, {
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + encodeURIComponent(state.geminiKey);
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] })
@@ -600,22 +788,30 @@ setInterval(tick, 1000);
 async function init() {
   try {
     state.db = await dbOpen();
-    const [saved, attempts, demoQuestions, demoArticles] = await Promise.all([
+    let demoQuestions = [];
+    let demoArticles = [];
+    try {
+      const resQ = await fetch('./questions.json');
+      if (resQ.ok) demoQuestions = await resQ.json();
+    } catch (e) { }
+
+    try {
+      const resA = await fetch('./artigos.json');
+      if (resA.ok) demoArticles = await resA.json();
+    } catch (e) { }
+
+    const [saved, attempts] = await Promise.all([
       dbGet('content', 'questions'),
-      dbGetAll('attempts'),
-      fetch('./questions.json').then(r => r.ok ? r.json() : []).catch(() => []),
-      fetch('./artigos.json').then(r => r.ok ? r.json() : []).catch(() => [])
+      dbGetAll('attempts')
     ]);
 
     const qList = Array.isArray(demoQuestions) ? demoQuestions : (demoQuestions?.questions || []);
     state.questions = (saved?.items && Array.isArray(saved.items)) ? saved.items : qList;
-
-    const artList = Array.isArray(demoArticles) ? demoArticles : (demoArticles?.articles || []);
-    state.articles = artList;
-
+    state.articles = Array.isArray(demoArticles) ? demoArticles : (demoArticles?.articles || []);
     state.dataset = saved?.dataset || 'demo';
     state.attempts = Array.isArray(attempts) ? attempts : [];
-    try { state.profile = { ...state.profile, ...JSON.parse(localStorage.getItem('lari-profile') || '{}') }; } catch (e) { }
+
+    try { state.profile = Object.assign({}, state.profile, JSON.parse(localStorage.getItem('lari-profile') || '{}')); } catch (e) { }
     try { state.time = JSON.parse(localStorage.getItem('lari-time') || '{}'); } catch (e) { }
     render();
   } catch (err) {
