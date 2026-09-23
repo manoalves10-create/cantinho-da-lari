@@ -1,0 +1,26 @@
+[
+  {
+    "id": "art-001",
+    "titulo": "Morfologia e Ecologia das Diatomáceas (Bacillariophyceae)",
+    "categoria": "Diatomáceas",
+    "autor_fonte": "Material de Apoio · Oceanografia Biológica",
+    "palavras_chave": ["frústula", "sílica", "cêntricas", "penadas", "ressurgência", "valva"],
+    "resumo": "As diatomáceas são algas unicelulares autotróficas envolvidas por uma carapaça rígida de sílica amorfa hidratada denominada frústula. A frústula é formada por duas metades que se encaixam: a epivalva (superior e maior) e a hipovalva (inferior e menor). Dividem-se morfologicamente em cêntricas (simetria radial, predominantemente planctônicas marinhas) e penadas (simetria bilateral, comuns em substratos bentônicos ou água doce). São os principais produtores primários em zonas de ressurgência e florações de primavera, sendo limitadas pela concentração de ácido silícico dissolvido."
+  },
+  {
+    "id": "art-002",
+    "titulo": "Dinoflagelados, Bioluminescência e Florações Nocivas (FANs)",
+    "categoria": "Dinoflagelados",
+    "autor_fonte": "Fundamentos de Ecologia Fitoplanctônica",
+    "palavras_chave": ["teca", "flagelos", "maré vermelha", "bioluminescência", "saxitoxina", "cíngulo", "sulco"],
+    "resumo": "Os dinoflagelados são microrganismos biflagelados caracterizados por um flagelo transversal localizado no cíngulo e um flagelo longitudinal no sulco, o que confere seu movimento rotacional característico. Apresentam espécies atecadas (desnudas) e tecadas (recobertas por placas rígidas de celulose). Várias espécies desenvolvem florações densas conhecidas como Marés Vermelhas e podem produzir potentes biotoxinas (como saxitoxinas de Alexandrium, causadoras de intoxicação paralisante por consumo de moluscos). Destacam-se também pela emissão de bioluminescência através do sistema luciferina-luciferase em espécies como Noctiluca."
+  },
+  {
+    "id": "art-003",
+    "titulo": "Cianobactérias Marinhas e Fixação de Nitrogênio",
+    "categoria": "Cianobactérias",
+    "autor_fonte": "Ciclos Biogeoquímicos do Oceano",
+    "palavras_chave": ["Trichodesmium", "fixação de nitrogênio", "oligotrófico", "proclorófitas", "pigmentos"],
+    "resumo": "As cianobactérias marinhas constituem o fitoplâncton procariótico, dominando ecossistemas oceânicos tropicais e subtropicais oligotróficos (pobres em nutrientes). Gêneros coloniais como Trichodesmium realizam a fixação de nitrogênio gasoso (N2) diretamente na água em condições aeróbicas, introduzindo nitrogênio novo na camada fótica. Além disso, picocianobactérias dos gêneros Prochlorococcus e Synechococcus respondem por uma fração expressiva da produção primária global e da biomassa em mares abertos."
+  }
+]
