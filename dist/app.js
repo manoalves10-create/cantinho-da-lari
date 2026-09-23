@@ -1,4 +1,4 @@
-/* Cantinho de Estudos da Lari: motor principal com autodetecção de modelo */
+/* Cantinho de Estudos da Lari: IA fixada no modelo universal (1.5 Flash) */
 const DB_NAME = 'cantinho-da-lari-v1';
 const DB_VERSION = 1;
 const $ = s => document.querySelector(s);
@@ -572,29 +572,7 @@ function appendChatMessage(text, sender = 'bot') {
   return msg;
 }
 
-/* Identificação dinâmica do modelo ativo da conta */
-let resolvedModel = null;
-
-async function getAvailableGeminiModel(key) {
-  if (resolvedModel) return resolvedModel;
-  try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(key)}`);
-    if (res.ok) {
-      const data = await res.json();
-      const list = (data.models || []).filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'));
-      const flash = list.find(m => m.name && m.name.toLowerCase().includes('flash'));
-      const chosen = flash ? flash.name : (list[0]?.name || null);
-      if (chosen) {
-        resolvedModel = chosen.replace(/^models\//, '');
-        return resolvedModel;
-      }
-    }
-  } catch (e) {
-    console.warn('Detecção de modelo offline:', e);
-  }
-  return 'gemini-3-flash-preview';
-}
-
+/* API simplificada e direta para o modelo gemini-1.5-flash */
 async function askGemini(query) {
   if (!state.geminiKey) {
     return 'Para ter respostas com raciocínio e síntese completa de IA, ative a chave gratuita do Gemini na aba "Meu plano e dados".';
@@ -611,29 +589,25 @@ ${JSON.stringify(state.articles || [], null, 2)}
 
 Dúvida ou questão da Lari: "${query}"`;
 
-  const detected = await getAvailableGeminiModel(state.geminiKey);
-  const candidateModels = [detected, 'gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-2.0-flash'].filter(Boolean);
-  const models = [...new Set(candidateModels)];
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(state.geminiKey)}`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] })
+    });
 
-  for (const m of models) {
-    const cleanModel = m.replace(/^models\//, '');
-    try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent?key=${encodeURIComponent(state.geminiKey)}`;
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        resolvedModel = cleanModel;
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui formular uma resposta detalhada. Tente reformular a pergunta.';
-      }
-    } catch (e) {}
+    if (!res.ok) {
+      console.error('Falha na API da Google. Status:', res.status);
+      return `Erro ${res.status}: O Google recusou a ligação com esta chave. Tente gerar uma nova chave no AI Studio certificando-se de que a API "Generative Language" está ativa no projeto.`;
+    }
+    
+    const data = await res.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui formular uma resposta detalhada. Tente reformular a pergunta.';
+  } catch (e) {
+    console.error('Erro de rede:', e);
+    return 'Falha de conexão com a IA. Verifique a sua internet ou desative bloqueadores de anúncios (AdBlock) para este site.';
   }
-
-  return 'Não foi possível conectar aos modelos do Gemini. Verifique se a sua chave de API em "Meu plano e dados" foi copiada por completo do Google AI Studio.';
 }
 
 $('#ai-fab')?.addEventListener('click', () => {
