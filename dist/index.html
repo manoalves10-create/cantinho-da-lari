@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#071c2b" />
+    <meta name="description" content="Questões de Fitoplâncton com correção fundamentada e acompanhamento de estudo." />
+    <title>Maré de Estudos · Fitoplâncton</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23071c2b'/%3E%3Cpath d='M11 35c9-11 15-11 24 0s15 11 19 1' fill='none' stroke='%235ce0d2' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='39' cy='21' r='5' fill='%23e9bd73'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" id="sidebar">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">≈</span><span>maré<span class="brand-light">de estudos</span></span></div>
+        <div class="subject-label">DISCIPLINA</div>
+        <div class="subject-chip"><span class="subject-dot"></span> Fitoplâncton <span class="chip-caret">⌄</span></div>
+        <nav class="side-nav" aria-label="Navegação principal">
+          <p class="nav-group">ESTUDAR</p>
+          <button type="button" class="nav-item active" data-view="overview"><span class="nav-icon">▦</span> Visão geral</button>
+          <button type="button" class="nav-item" data-view="practice"><span class="nav-icon">▤</span> Resolver questões <span class="nav-count" id="nav-count">0</span></button>
+          <button type="button" class="nav-item" data-view="errors"><span class="nav-icon">↺</span> Caderno de erros</button>
+          <p class="nav-group">ACOMPANHAR</p>
+          <button type="button" class="nav-item" data-view="results"><span class="nav-icon">◫</span> Resultados</button>
+          <button type="button" class="nav-item" data-view="history"><span class="nav-icon">◷</span> Histórico</button>
+          <p class="nav-group">CONFIGURAR</p>
+          <button type="button" class="nav-item" data-view="settings"><span class="nav-icon">⚙</span> Meu plano e dados</button>
+        </nav>
+        <div class="sidebar-footer"><span class="footer-orbit">◌</span><span>Um passo de cada vez.<small>Seu ritmo, com clareza.</small></span></div>
+      </aside>
+      <div class="main-column">
+        <header class="topbar"><button type="button" id="menu-toggle" class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button><div class="crumb">Fitoplâncton <span>/</span> <span id="crumb-current">Visão geral</span></div><div class="top-actions"><span id="active-time" title="Tempo com o site visível e em uso">◷ 0 min</span><span class="avatar" aria-label="Área de estudo">FE</span></div></header>
+        <main id="app-content" tabindex="-1"></main>
+      </div>
+    </div>
+    <input type="file" id="import-input" accept="application/json,.json" hidden />
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

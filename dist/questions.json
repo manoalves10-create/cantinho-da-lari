@@ -1,0 +1,98 @@
+[
+  {
+    "id": "demo-001", "type": "multiple", "topic": "Fundamentos", "difficulty": "Básica",
+    "prompt": "Qual é o papel ecológico mais diretamente associado ao fitoplâncton nas redes alimentares marinhas?",
+    "options": ["Realizar produção primária por fotossíntese", "Consumir exclusivamente peixes pequenos", "Decompor apenas organismos bentônicos", "Transportar sedimentos entre praias"], "answer": 0,
+    "explanation": "O fitoplâncton inclui organismos fotossintetizantes que convertem energia luminosa em matéria orgânica e sustentam a base de muitas redes alimentares aquáticas.",
+    "reading": "Releia o trecho inicial de ‘What are phytoplankton?’, da NOAA, e anote a relação entre fotossíntese e produção primária.",
+    "source": {"title":"NOAA · What are phytoplankton?", "url":"https://oceanservice.noaa.gov/facts/phyto.html", "locator":"Visão geral"}
+  },
+  {
+    "id": "demo-002", "type": "multiple", "topic": "Diatomáceas", "difficulty": "Básica",
+    "prompt": "Qual material compõe a frústula característica das diatomáceas?",
+    "options": ["Sílica", "Carbonato de cálcio", "Quitina", "Celulose exclusivamente"], "answer": 0,
+    "explanation": "As paredes rígidas das diatomáceas, chamadas frústulas, são constituídas de sílica.",
+    "reading": "Revise ‘The Spring Bloom Awakens the Waters of Long Island Sound’, da NOAA, no trecho que descreve as frústulas.",
+    "source": {"title":"NOAA · Spring bloom and diatoms", "url":"https://www.fisheries.noaa.gov/feature-story/spring-bloom-awakens-waters-long-island-sound", "locator":"Parágrafo sobre frústulas"}
+  },
+  {
+    "id": "demo-003", "type": "multiple", "topic": "Dinoflagelados", "difficulty": "Básica",
+    "prompt": "Qual estrutura é associada ao movimento de muitos dinoflagelados?",
+    "options": ["Flagelos", "Frústula de sílica", "Raízes", "Pés ambulacrais"], "answer": 0,
+    "explanation": "A NOAA descreve os dinoflagelados como organismos que podem se deslocar com o auxílio de estruturas semelhantes a chicotes, os flagelos.",
+    "reading": "Compare, em ‘What are phytoplankton?’, as descrições de diatomáceas e dinoflagelados.",
+    "source": {"title":"NOAA · What are phytoplankton?", "url":"https://oceanservice.noaa.gov/facts/phyto.html", "locator":"Diatoms and dinoflagellates"}
+  },
+  {
+    "id": "demo-004", "type": "multiple", "topic": "Nutrientes", "difficulty": "Intermediária",
+    "prompt": "Além de nitrogênio e fósforo, qual nutriente é especialmente necessário para a formação das estruturas silicosas das diatomáceas?",
+    "options": ["Silício dissolvido", "Sódio metálico", "Oxigênio molecular como único nutriente", "Metano"], "answer": 0,
+    "explanation": "O silício dissolvido é utilizado pelas diatomáceas na formação de suas estruturas de sílica; nitrogênio e fósforo também são nutrientes importantes ao crescimento do fitoplâncton.",
+    "reading": "Leia o primeiro parágrafo de ‘Nutrient Chemistry’, da NOAA, e faça uma lista dos nutrientes citados.",
+    "source": {"title":"NOAA · Nutrient Chemistry", "url":"https://www.ecofoci.noaa.gov/cruiseWeb/ice08/Ice2008_nutrient.html", "locator":"Primeiro parágrafo"}
+  },
+  {
+    "id": "demo-005", "type": "multiple", "topic": "Florações", "difficulty": "Intermediária",
+    "prompt": "Por que ‘maré vermelha’ pode ser um nome impreciso para uma floração de algas nocivas?",
+    "options": ["Porque a coloração vermelha não está presente em toda floração nociva", "Porque o fenômeno ocorre apenas em rios", "Porque depende sempre das fases da Lua", "Porque é causado exclusivamente por sedimentos"], "answer": 0,
+    "explanation": "‘Floração de algas nocivas’ descreve o fenômeno com mais precisão: a água nem sempre fica vermelha e as consequências dependem dos organismos envolvidos.",
+    "reading": "Releia ‘What is a red tide?’, da NOAA, e diferencie o nome popular do termo técnico.",
+    "source": {"title":"NOAA · What is a red tide?", "url":"https://oceanservice.noaa.gov/facts/redtide.html", "locator":"Definição"}
+  },
+  {
+    "id": "demo-006", "type": "multiple", "topic": "Nutrientes", "difficulty": "Intermediária",
+    "prompt": "O que é ressurgência no contexto da produtividade costeira?",
+    "options": ["Ascensão de águas mais profundas, frias e ricas em nutrientes", "Queda de sedimentos da atmosfera sobre a praia", "Migração sazonal exclusiva de zooplâncton", "Aumento do nível do mar por marés astronômicas"], "answer": 0,
+    "explanation": "A ressurgência leva águas profundas ricas em nutrientes em direção à superfície iluminada, onde podem favorecer o crescimento de fitoplâncton.",
+    "reading": "Leia ‘An Ode to Diatoms’, da NOAA, e relacione ressurgência, nutrientes e crescimento de diatomáceas.",
+    "source": {"title":"NOAA · An Ode to Diatoms", "url":"https://www.fisheries.noaa.gov/science-blog/ode-diatoms", "locator":"Trecho sobre upwelling"}
+  },
+  {
+    "id": "demo-007", "type": "multiple", "topic": "Fundamentos", "difficulty": "Intermediária",
+    "prompt": "Em qual região da coluna d’água a luz disponível favorece diretamente a fotossíntese do fitoplâncton?",
+    "options": ["Na zona iluminada ou fótica", "Somente no sedimento profundo", "Apenas abaixo da zona afótica", "Exclusivamente na interface com o fundo"], "answer": 0,
+    "explanation": "A fotossíntese depende de luz; por isso, o fitoplâncton fotossintetizante se desenvolve na porção iluminada da coluna d’água.",
+    "reading": "Revise ‘Nutrient Chemistry’, da NOAA, especialmente a menção à photic zone, e relacione luz e nutrientes.",
+    "source": {"title":"NOAA · Nutrient Chemistry", "url":"https://www.ecofoci.noaa.gov/cruiseWeb/ice08/Ice2008_nutrient.html", "locator":"Photic zone"}
+  },
+  {
+    "id": "demo-008", "type": "multiple", "topic": "Florações", "difficulty": "Intermediária",
+    "prompt": "Qual afirmação sobre florações de algas nocivas é a mais adequada?",
+    "options": ["Algumas podem produzir toxinas que afetam peixes e tornam moluscos perigosos ao consumo", "Todas produzem a mesma toxina", "Nenhuma afeta outras espécies", "São identificadas apenas pela cor da água"], "answer": 0,
+    "explanation": "Algumas florações envolvem microalgas produtoras de toxinas, com efeitos sobre organismos aquáticos e riscos associados ao consumo de moluscos contaminados.",
+    "reading": "Leia ‘What is a red tide?’, da NOAA, e identifique os efeitos apresentados para peixes e moluscos.",
+    "source": {"title":"NOAA · What is a red tide?", "url":"https://oceanservice.noaa.gov/facts/redtide.html", "locator":"Efeitos das toxinas"}
+  },
+  {
+    "id": "demo-009", "type": "multiple", "topic": "Diatomáceas", "difficulty": "Intermediária",
+    "prompt": "Qual relação explica a importância das diatomáceas em regiões costeiras produtivas?",
+    "options": ["Podem responder por parte importante da produção primária e transferir carbono à rede alimentar", "São sempre grandes predadoras de peixes", "Vivem exclusivamente fixas em rochas", "Impedem toda transferência de matéria orgânica"], "answer": 0,
+    "explanation": "A produção das diatomáceas contribui para sustentar organismos de outros níveis da rede alimentar e para a dinâmica de carbono no oceano.",
+    "reading": "Consulte o começo de ‘An Ode to Diatoms’, da NOAA, e explique a expressão ‘produção primária’ com suas palavras.",
+    "source": {"title":"NOAA · An Ode to Diatoms", "url":"https://www.fisheries.noaa.gov/science-blog/ode-diatoms", "locator":"Parágrafos iniciais"}
+  },
+  {
+    "id": "demo-010", "type": "multiple", "topic": "Fundamentos", "difficulty": "Básica",
+    "prompt": "Qual processo conecta diretamente parte do fitoplâncton à produção de oxigênio no oceano?",
+    "options": ["Fotossíntese", "Erosão costeira", "Precipitação de sal", "Maré astronômica"], "answer": 0,
+    "explanation": "Organismos fotossintetizantes, inclusive parte do plâncton oceânico, participam da produção de oxigênio ao converter energia luminosa.",
+    "reading": "Releia ‘How much oxygen comes from the ocean?’, da NOAA, e anote a participação dos organismos fotossintetizantes.",
+    "source": {"title":"NOAA · Ocean oxygen", "url":"https://oceanservice.noaa.gov/facts/ocean-oxygen.html", "locator":"Primeiro parágrafo"}
+  },
+  {
+    "id": "demo-011", "type": "open", "topic": "Fundamentos", "difficulty": "Intermediária",
+    "prompt": "Explique por que o fitoplâncton pode ser considerado uma base de muitas redes alimentares marinhas.",
+    "criteria": ["Menciona a produção primária por fotossíntese", "Explica a produção de matéria orgânica", "Relaciona essa produção à transferência para outros organismos"],
+    "model": "O fitoplâncton realiza produção primária: utiliza luz para produzir matéria orgânica. Essa matéria serve de base para o consumo por outros organismos, permitindo a transferência de matéria e energia ao longo da rede alimentar.",
+    "reading": "Revise ‘What are phytoplankton?’, da NOAA, e faça um esquema simples da passagem da produção primária aos consumidores.",
+    "source": {"title":"NOAA · What are phytoplankton?", "url":"https://oceanservice.noaa.gov/facts/phyto.html", "locator":"Visão geral"}
+  },
+  {
+    "id": "demo-012", "type": "open", "topic": "Nutrientes", "difficulty": "Intermediária",
+    "prompt": "Explique como a ressurgência pode favorecer o crescimento de diatomáceas na superfície.",
+    "criteria": ["Descreve a subida de águas profundas", "Menciona a chegada de nutrientes à superfície", "Relaciona nutrientes e crescimento de diatomáceas na região iluminada"],
+    "model": "A ressurgência leva águas profundas ricas em nutrientes para a superfície iluminada. A maior disponibilidade desses nutrientes pode favorecer o crescimento de diatomáceas e, assim, a produção primária na região.",
+    "reading": "Releia ‘An Ode to Diatoms’, da NOAA, e trace a sequência ressurgência → nutrientes → crescimento.",
+    "source": {"title":"NOAA · An Ode to Diatoms", "url":"https://www.fisheries.noaa.gov/science-blog/ode-diatoms", "locator":"Trecho sobre upwelling"}
+  }
+]
