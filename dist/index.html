@@ -1,83 +1,115 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0a0f16" />
-    <meta name="description" content="Cantinho de Estudos da Lari: questões, artigos e tutor de IA de Fitoplâncton." />
-    <title>Cantinho de Estudos da Lari · Fitoplâncton</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230a0f16'/%3E%3Cpath d='M12 34c8-10 14-10 22 0s14 10 18 1' fill='none' stroke='%230d80bf' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='38' cy='20' r='5' fill='%23ffffff'/%3E%3C/svg%3E" />
-    <link rel="stylesheet" href="./style.css" />
-    <script src="./app.js" defer></script>
-  </head>
-  <body>
-    <div class="app-shell">
-      <aside class="sidebar" id="sidebar">
-        <div class="brand">
-          <span class="brand-mark" aria-hidden="true">★</span>
-          <span>cantinho<span class="brand-light">da lari</span></span>
-        </div>
-        <div class="subject-label">DISCIPLINA</div>
-        <div class="subject-chip"><span class="subject-dot"></span> Fitoplâncton <span class="chip-caret">⌄</span></div>
-        <nav class="side-nav" aria-label="Navegação principal">
-          <p class="nav-group">ESTUDAR</p>
-          <button type="button" class="nav-item active" data-view="overview"><span class="nav-icon">▦</span> Visão geral</button>
-          <button type="button" class="nav-item" data-view="practice"><span class="nav-icon">▤</span> Resolver questões <span class="nav-count" id="nav-count">0</span></button>
-          <button type="button" class="nav-item" data-view="errors"><span class="nav-icon">↺</span> Caderno de erros</button>
-          <button type="button" class="nav-item" data-view="library"><span class="nav-icon">📖</span> Biblioteca de Artigos</button>
-          <p class="nav-group">ACOMPANHAR</p>
-          <button type="button" class="nav-item" data-view="results"><span class="nav-icon">◫</span> Resultados</button>
-          <button type="button" class="nav-item" data-view="history"><span class="nav-icon">◷</span> Histórico</button>
-          <p class="nav-group">CONFIGURAR</p>
-          <button type="button" class="nav-item" data-view="settings"><span class="nav-icon">⚙</span> Meu plano e dados</button>
-        </nav>
-        <div class="sidebar-footer">
-          <span class="footer-orbit">◌</span>
-          <span>Um passo de cada vez.<small>Foco total na aprovação.</small></span>
-        </div>
-      </aside>
-      <div class="main-column">
-        <header class="topbar">
-          <button type="button" id="menu-toggle" class="menu-toggle" aria-label="Abrir menu" aria-expanded="false">☰</button>
-          <div class="crumb">Fitoplâncton <span>/</span> <span id="crumb-current">Visão geral</span></div>
-          <div class="top-actions">
-            <span id="active-time" title="Tempo com o site visível e em uso">◷ 0 min</span>
-            <span class="avatar" aria-label="Estudante">LA</span>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cantinho de Estudos da Lari | Fitoplâncton</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Barra Lateral Tricolor -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-brand">
+        <span class="star-gold">★</span> cantinho da lari
+      </div>
+
+      <div class="sidebar-section-title">DISCIPLINA</div>
+      <div class="discipline-badge">
+        <span class="dot-active"></span> Fitoplâncton
+      </div>
+
+      <div class="sidebar-section-title">ESTUDAR</div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="overview">
+          <span>Visão geral</span>
+        </button>
+        <button class="nav-item" data-view="practice">
+          <span>Resolver questões</span>
+          <span class="nav-count" id="nav-count">0</span>
+        </button>
+        <button class="nav-item" data-view="errors">
+          <span>Caderno de erros</span>
+        </button>
+        <button class="nav-item" data-view="library">
+          <span>Biblioteca de Artigos</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-section-title">ACOMPANHAR</div>
+      <nav class="sidebar-nav">
+        <button class="nav-item" data-view="results">
+          <span>Resultados</span>
+        </button>
+        <button class="nav-item" data-view="history">
+          <span>Histórico</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-section-title">CONFIGURAR</div>
+      <nav class="sidebar-nav">
+        <button class="nav-item" data-view="settings">
+          <span>⚙ Meu plano e dados</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>Um passo de cada vez.<br /><strong>Foco total na aprovação.</strong></p>
+      </div>
+    </aside>
+
+    <!-- Área Principal de Conteúdo -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button id="menu-toggle" class="menu-btn" aria-label="Abrir menu">☰</button>
+          <div class="breadcrumbs">
+            <span>Fitoplâncton</span>
+            <span class="separator">/</span>
+            <span id="crumb-current">Visão geral</span>
           </div>
-        </header>
-        <main id="app-content" tabindex="-1"></main>
+        </div>
+        <div class="topbar-right">
+          <span id="active-time" class="time-counter">◷ 0 min</span>
+          <span class="user-avatar">LA</span>
+        </div>
+      </header>
+
+      <main id="app-content" class="content-area" tabindex="-1">
+        <!-- Renderizado dinamicamente pelo app.js -->
+      </main>
+    </div>
+  </div>
+
+  <!-- Componentes Flutuantes -->
+  <input type="file" id="import-input" accept=".json" style="display:none;" />
+  <div id="toast" class="toast"></div>
+
+  <!-- Botão Flutuante da IA Atualizado -->
+  <button id="ai-fab" class="ai-fab" aria-label="Abrir IA auxiliar da Laris">
+    💬 IA auxiliar da Laris
+  </button>
+
+  <!-- Janela do Chat -->
+  <div id="ai-widget" class="ai-widget" aria-hidden="true">
+    <div class="ai-widget-header">
+      <div>
+        <h3>IA auxiliar da Laris</h3>
+        <small>Responde com base nos materiais</small>
+      </div>
+      <button id="ai-widget-close" class="ai-widget-close" aria-label="Fechar">✕</button>
+    </div>
+    <div id="ai-widget-messages" class="ai-widget-messages">
+      <div class="ai-bubble ai-bot">
+        Olá, Laris! Sou sua <strong>IA auxiliar</strong> em Fitoplâncton. Pode me perguntar sobre morfologia celular, frústulas de diatomáceas, tecas de dinoflagelados ou florações da CETESB!
       </div>
     </div>
+    <form id="ai-widget-form" class="ai-widget-form">
+      <input type="text" id="ai-widget-input" placeholder="Tire sua dúvida com base nos artigos..." autocomplete="off" />
+      <button type="submit" aria-label="Enviar">➤</button>
+    </form>
+  </div>
 
-    <!-- Botão Flutuante e Janela do Tutor de IA -->
-    <div class="ai-fab" id="ai-fab" title="Conversar com o Tutor IA">
-      <span class="ai-fab-icon">💬</span>
-      <span class="ai-fab-text">Tutor IA</span>
-    </div>
-
-    <section class="ai-widget" id="ai-widget" aria-hidden="true">
-      <div class="ai-widget-header">
-        <div class="ai-widget-info">
-          <span class="ai-dot"></span>
-          <div>
-            <strong>Tutor IA de Fitoplâncton</strong>
-            <small>Responde com base nos materiais</small>
-          </div>
-        </div>
-        <button type="button" class="ai-widget-close" id="ai-widget-close" aria-label="Fechar Tutor">✕</button>
-      </div>
-      <div class="ai-widget-body" id="ai-widget-messages">
-        <div class="ai-bubble ai-bot">
-          Olá, Lari! Sou o seu tutor de Fitoplâncton. Pode pesquisar ou me perguntar sobre qualquer conceito dos textos, morfologia de diatomáceas, dinoflagelados ou florações.
-        </div>
-      </div>
-      <form class="ai-widget-form" id="ai-widget-form">
-        <input type="text" id="ai-widget-input" placeholder="Tire sua dúvida com base nos artigos..." autocomplete="off" />
-        <button type="submit" class="ai-widget-send" aria-label="Enviar pergunta">➤</button>
-      </form>
-    </section>
-
-    <input type="file" id="import-input" accept="application/json,.json" hidden />
-    <div id="toast" role="status" aria-live="polite"></div>
-  </body>
+  <script src="./app.js"></script>
+</body>
 </html>
