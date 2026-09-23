@@ -1,26 +1,34 @@
 [
   {
-    "id": "art-001",
-    "titulo": "Morfologia e Ecologia das Diatomáceas (Bacillariophyceae)",
+    "id": "art-01",
+    "titulo": "Organização Anatômica e Arquitetura da Frústula das Diatomáceas",
     "categoria": "Diatomáceas",
-    "autor_fonte": "Material de Apoio · Oceanografia Biológica",
-    "palavras_chave": ["frústula", "sílica", "cêntricas", "penadas", "ressurgência", "valva"],
-    "resumo": "As diatomáceas são algas unicelulares autotróficas envolvidas por uma carapaça rígida de sílica amorfa hidratada denominada frústula. A frústula é formada por duas metades que se encaixam: a epivalva (superior e maior) e a hipovalva (inferior e menor). Dividem-se morfologicamente em cêntricas (simetria radial, predominantemente planctônicas marinhas) e penadas (simetria bilateral, comuns em substratos bentônicos ou água doce). São os principais produtores primários em zonas de ressurgência e florações de primavera, sendo limitadas pela concentração de ácido silícico dissolvido."
+    "autor_fonte": "Carlos Eduardo L. Vieira (Paleontologia: Microfósseis, Ed. Interciência)",
+    "resumo": "A frústula silicosa opalina (SiO2.nH2O) é composta por duas tecas encaixadas: epiteca (maior) e hipoteca (menor), cada uma formada por valva (face valvar e manto) e cíngulos (faixa lateral ou pleura). As valvas organizam-se a partir do anulo (radiais/cêntricas) ou do esterno (axiais/penadas), desenvolvendo costelas, estrias e aréolas oclusas por hímen ou velas (cribra, rotae, volae). Em penadas rafidiadas, a rafe é uma fenda longitudinal sustentada internamente por fíbulas, essencial para locomoção e alongamento celular.",
+    "palavras_chave": ["frústula", "epivalva", "hipovalva", "cíngulo", "rafe", "aréolas", "fíbulas", "rimopórtula"]
   },
   {
-    "id": "art-002",
-    "titulo": "Dinoflagelados, Bioluminescência e Florações Nocivas (FANs)",
+    "id": "art-02",
+    "titulo": "Morfologia e Tabulação Tecal em Dinoflagelados Peridiniales e Prorocentrales",
     "categoria": "Dinoflagelados",
-    "autor_fonte": "Fundamentos de Ecologia Fitoplanctônica",
-    "palavras_chave": ["teca", "flagelos", "maré vermelha", "bioluminescência", "saxitoxina", "cíngulo", "sulco"],
-    "resumo": "Os dinoflagelados são microrganismos biflagelados caracterizados por um flagelo transversal localizado no cíngulo e um flagelo longitudinal no sulco, o que confere seu movimento rotacional característico. Apresentam espécies atecadas (desnudas) e tecadas (recobertas por placas rígidas de celulose). Várias espécies desenvolvem florações densas conhecidas como Marés Vermelhas e podem produzir potentes biotoxinas (como saxitoxinas de Alexandrium, causadoras de intoxicação paralisante por consumo de moluscos). Destacam-se também pela emissão de bioluminescência através do sistema luciferina-luciferase em espécies como Noctiluca."
+    "autor_fonte": "Carolina A. Islabão & Clarisse Odebrecht (Biota Neotropica, 2011)",
+    "resumo": "Os dinoflagelados tecados são revestidos por placas de celulose organizadas em séries apicais ('), pré-cingulares (''), pós-cingulares ('''), antiapicais ('''') e intercalares (a). Em Protoperidinium, a célula divide-se em epiteca e hipoteca por meio do cíngulo transversal e do sulco longitudinal. A diagnose das espécies depende da geometria da primeira placa apical (1'), categorizada em Ortho, Meta ou Para, e da segunda placa intercalar (2a), definida como Quadra, Penta ou Hexa. Prorocentrales distinguem-se pela ausência de cíngulo e teca dividida em duas valvas com processos apicais.",
+    "palavras_chave": ["teca", "tabulação", "cíngulo", "sulco", "Protoperidinium", "Prorocentrum", "Ortho", "Meta", "placas"]
   },
   {
-    "id": "art-003",
-    "titulo": "Cianobactérias Marinhas e Fixação de Nitrogênio",
+    "id": "art-03",
+    "titulo": "Cianobactérias Planctônicas: Morfologia Celular, Florações e Cianotoxinas",
     "categoria": "Cianobactérias",
-    "autor_fonte": "Ciclos Biogeoquímicos do Oceano",
-    "palavras_chave": ["Trichodesmium", "fixação de nitrogênio", "oligotrófico", "proclorófitas", "pigmentos"],
-    "resumo": "As cianobactérias marinhas constituem o fitoplâncton procariótico, dominando ecossistemas oceânicos tropicais e subtropicais oligotróficos (pobres em nutrientes). Gêneros coloniais como Trichodesmium realizam a fixação de nitrogênio gasoso (N2) diretamente na água em condições aeróbicas, introduzindo nitrogênio novo na camada fótica. Além disso, picocianobactérias dos gêneros Prochlorococcus e Synechococcus respondem por uma fração expressiva da produção primária global e da biomassa em mares abertos."
+    "autor_fonte": "Maria do Carmo Carvalho et al. (Manual CETESB, 2013)",
+    "resumo": "Cianobactérias são procariontes fotossintetizantes que desenvolvem estruturas especializadas: aerótopos para empuxo e flutuação vertical na coluna d'água, heterocistos para fixação de N2 atmosférico por meio da nitrogenase sob anóxia, e acinetos para resistência esporal. A eutrofização propicia florações na forma de natas superficiais (scums e hyperscums). As cianotoxinas dividem-se em hepatotoxinas (microcistinas, nodularinas e cilindrospermopsina), neurotoxinas (saxitoxinas, anatoxinas) e dermatotoxinas (lipopolissacarídeos - LPS). A Portaria MS 2914/2011 e a Resolução CONAMA 357/2005 fixam limites máximos de células e toxinas em mananciais.",
+    "palavras_chave": ["heterocisto", "acineto", "aerótopo", "microcistina", "saxitoxina", "floração", "Portaria 2914", "scum"]
+  },
+  {
+    "id": "art-04",
+    "titulo": "Divisões Ecológicas Oceânicas e Dinâmica de Produção Primária",
+    "categoria": "Ecologia",
+    "autor_fonte": "Karoline M. F. Lubiana (O Fitoplâncton Marinho)",
+    "resumo": "A comunidade fitoplanctônica é responsável por mais de 90% da produção primária marinha, restrita à zona eufótica iluminada. A coluna d'água divide-se horizontalmente em províncias nerítica (sobre a plataforma continental até 200 m) e oceânica (águas profundas), e verticalmente em epipelágica, batial, abissal e hadal. A produção primária é controlada pelo balanço entre radiação fotossinteticamente ativa (PAR) e nutrientes essenciais (N, P, Si, Fe). Fenômenos de ressurgência costeira em bordas continentais quebram a termoclina e fertilizam a zona eufótica, estimulando florações de diatomáceas e dinoflagelados.",
+    "palavras_chave": ["zona eufótica", "nerítico", "oceânico", "ressurgência", "nutrientes", "produção primária", "bomba biológica"]
   }
 ]
