@@ -1,4 +1,4 @@
-/* Cantinho de Estudos da Lari: motor completo com IA unificada */
+/* Cantinho de Estudos da Lari: motor principal com autodetecção de modelo */
 const DB_NAME = 'cantinho-da-lari-v1';
 const DB_VERSION = 1;
 const $ = s => document.querySelector(s);
@@ -572,7 +572,29 @@ function appendChatMessage(text, sender = 'bot') {
   return msg;
 }
 
-/* Mecanismo de fallback inteligente para Gemini */
+/* Identificação dinâmica do modelo ativo da conta */
+let resolvedModel = null;
+
+async function getAvailableGeminiModel(key) {
+  if (resolvedModel) return resolvedModel;
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(key)}`);
+    if (res.ok) {
+      const data = await res.json();
+      const list = (data.models || []).filter(m => Array.isArray(m.supportedGenerationMethods) && m.supportedGenerationMethods.includes('generateContent'));
+      const flash = list.find(m => m.name && m.name.toLowerCase().includes('flash'));
+      const chosen = flash ? flash.name : (list[0]?.name || null);
+      if (chosen) {
+        resolvedModel = chosen.replace(/^models\//, '');
+        return resolvedModel;
+      }
+    }
+  } catch (e) {
+    console.warn('Detecção de modelo offline:', e);
+  }
+  return 'gemini-3-flash-preview';
+}
+
 async function askGemini(query) {
   if (!state.geminiKey) {
     return 'Para ter respostas com raciocínio e síntese completa de IA, ative a chave gratuita do Gemini na aba "Meu plano e dados".';
@@ -589,11 +611,14 @@ ${JSON.stringify(state.articles || [], null, 2)}
 
 Dúvida ou questão da Lari: "${query}"`;
 
-  const models = ['gemini-1.5-flash', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+  const detected = await getAvailableGeminiModel(state.geminiKey);
+  const candidateModels = [detected, 'gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-2.0-flash'].filter(Boolean);
+  const models = [...new Set(candidateModels)];
 
-  for (const model of models) {
+  for (const m of models) {
+    const cleanModel = m.replace(/^models\//, '');
     try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(state.geminiKey)}`;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${cleanModel}:generateContent?key=${encodeURIComponent(state.geminiKey)}`;
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -602,6 +627,7 @@ Dúvida ou questão da Lari: "${query}"`;
 
       if (res.ok) {
         const data = await res.json();
+        resolvedModel = cleanModel;
         return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui formular uma resposta detalhada. Tente reformular a pergunta.';
       }
     } catch (e) {}
