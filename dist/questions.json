@@ -1,98 +1,122 @@
 [
   {
-    "id": "demo-001", "type": "multiple", "topic": "Fundamentos", "difficulty": "Básica",
-    "prompt": "Qual é o papel ecológico mais diretamente associado ao fitoplâncton nas redes alimentares marinhas?",
-    "options": ["Realizar produção primária por fotossíntese", "Consumir exclusivamente peixes pequenos", "Decompor apenas organismos bentônicos", "Transportar sedimentos entre praias"], "answer": 0,
-    "explanation": "O fitoplâncton inclui organismos fotossintetizantes que convertem energia luminosa em matéria orgânica e sustentam a base de muitas redes alimentares aquáticas.",
-    "reading": "Releia o trecho inicial de ‘What are phytoplankton?’, da NOAA, e anote a relação entre fotossíntese e produção primária.",
-    "source": {"title":"NOAA · What are phytoplankton?", "url":"https://oceanservice.noaa.gov/facts/phyto.html", "locator":"Visão geral"}
+    "id": "FIT-DIA-01",
+    "topic": "Diatomáceas",
+    "difficulty": "Média",
+    "type": "multiple",
+    "prompt": "Com base na arquitetura da frústula das diatomáceas (conforme esquematizado na Figura 6.3 do Capítulo 6 de Paleontologia), como se denominam, respectivamente, a teca menor, a sua respectiva face valvar e o elemento cingular intermediário que conecta diretamente a valva à cinta pleural?",
+    "options": [
+      "Epiteca, Epivalva e Valvocópula",
+      "Hipoteca, Hipovalva e Valvocópula",
+      "Hipoteca, Manto Valvar e Septo",
+      "Epiteca, Hipovalva e Fíbula"
+    ],
+    "answer": 1,
+    "explanation": "A frústula bivalve é formada pela teca maior (epiteca) e pela teca menor (hipoteca). A lâmina da teca menor é a hipovalva. O primeiro cíngulo responsável pelo contato físico direto entre a cinta (pleura) e a valva é denominado valvocópula.",
+    "reading": "Capítulo 6: Diatomáceas (Carlos Eduardo Lucas Vieira), Seção: Componentes Silicosos da Parede Celular: Frústula e Detalhes das Cintas.",
+    "source": {
+      "title": "Paleontologia: Microfósseis (Editora Interciência)",
+      "locator": "Capítulo 6, p. 112-116, Figuras 6.3B e 6.4I"
+    }
   },
   {
-    "id": "demo-002", "type": "multiple", "topic": "Diatomáceas", "difficulty": "Básica",
-    "prompt": "Qual material compõe a frústula característica das diatomáceas?",
-    "options": ["Sílica", "Carbonato de cálcio", "Quitina", "Celulose exclusivamente"], "answer": 0,
-    "explanation": "As paredes rígidas das diatomáceas, chamadas frústulas, são constituídas de sílica.",
-    "reading": "Revise ‘The Spring Bloom Awakens the Waters of Long Island Sound’, da NOAA, no trecho que descreve as frústulas.",
-    "source": {"title":"NOAA · Spring bloom and diatoms", "url":"https://www.fisheries.noaa.gov/feature-story/spring-bloom-awakens-waters-long-island-sound", "locator":"Parágrafo sobre frústulas"}
+    "id": "FIT-DIA-02",
+    "topic": "Diatomáceas",
+    "difficulty": "Difícil",
+    "type": "multiple",
+    "prompt": "Ao analisar a ultraestrutura de uma valva de diatomácea cêntrica e penada (conforme detalhado nas Figuras 6.4 e 6.5 do Capítulo 6), identificam-se orifícios tubulares com abertura interna em fenda achatada simples ou pregueada ('processos labiados') e poros oclusos por placas espessas com perfurações centrais. Essas estruturas correspondem a:",
+    "options": [
+      "Fultopórtulas e Hímen",
+      "Rimopórtulas e Vela do tipo Cribra",
+      "Fíbulas e Vela do tipo Rotae",
+      "Helictoglossas e Ocelos"
+    ],
+    "answer": 1,
+    "explanation": "Os processos labiados são as rimopórtulas (tubos que atravessam a face valvar com fenda labial interna). As velas do tipo cribra são placas de sílica unidas à borda da aréola por todo o perímetro, apresentando pequenas perfurações concentradas em sua área central.",
+    "reading": "Capítulo 6: Diatomáceas (Carlos Eduardo Lucas Vieira), Seções: Frústulas: Detalhes das Valvas e Tipos de Processos.",
+    "source": {
+      "title": "Paleontologia: Microfósseis (Editora Interciência)",
+      "locator": "Capítulo 6, p. 115-119, Figuras 6.4B e 6.5E-J"
+    }
   },
   {
-    "id": "demo-003", "type": "multiple", "topic": "Dinoflagelados", "difficulty": "Básica",
-    "prompt": "Qual estrutura é associada ao movimento de muitos dinoflagelados?",
-    "options": ["Flagelos", "Frústula de sílica", "Raízes", "Pés ambulacrais"], "answer": 0,
-    "explanation": "A NOAA descreve os dinoflagelados como organismos que podem se deslocar com o auxílio de estruturas semelhantes a chicotes, os flagelos.",
-    "reading": "Compare, em ‘What are phytoplankton?’, as descrições de diatomáceas e dinoflagelados.",
-    "source": {"title":"NOAA · What are phytoplankton?", "url":"https://oceanservice.noaa.gov/facts/phyto.html", "locator":"Diatoms and dinoflagellates"}
+    "id": "FIT-DINO-01",
+    "topic": "Dinoflagelados",
+    "difficulty": "Difícil",
+    "type": "multiple",
+    "prompt": "Na identificação morfológica do gênero Protoperidinium (conforme documentado por Islabão & Odebrecht na Biota Neotropica), a diagnose taxonômica baseia-se na tabulação das placas da teca. Quando a primeira placa apical (1') estabelece contato direto com quatro placas vizinhas e a segunda placa intercalar (2a) faz contato com seis placas, a tabulação é classificada tecnicamente como:",
+    "options": [
+      "Ortho - Quadra",
+      "Meta - Hexa",
+      "Ortho - Hexa",
+      "Para - Penta"
+    ],
+    "answer": 2,
+    "explanation": "No sistema de Balech para Protoperidinium, a configuração Ortho refere-se à primeira placa apical (1') em formato rômbico contatando 4 placas vizinhas; a terminologia Hexa indica que a segunda placa intercalar anterior dorsal (2a) possui seis lados, contatando 6 placas adjacentes.",
+    "reading": "Artigo 'Dinoflagelados do microplâncton na plataforma continental e talude do extremo sul do Brasil' (Biota Neotropica, 2011).",
+    "source": {
+      "title": "Biota Neotropica (Islabão & Odebrecht, 2011)",
+      "locator": "Seção: Descrição e distribuição das espécies, p. 154-160, Figuras 18-20 (P. divaricatum)"
+    }
   },
   {
-    "id": "demo-004", "type": "multiple", "topic": "Nutrientes", "difficulty": "Intermediária",
-    "prompt": "Além de nitrogênio e fósforo, qual nutriente é especialmente necessário para a formação das estruturas silicosas das diatomáceas?",
-    "options": ["Silício dissolvido", "Sódio metálico", "Oxigênio molecular como único nutriente", "Metano"], "answer": 0,
-    "explanation": "O silício dissolvido é utilizado pelas diatomáceas na formação de suas estruturas de sílica; nitrogênio e fósforo também são nutrientes importantes ao crescimento do fitoplâncton.",
-    "reading": "Leia o primeiro parágrafo de ‘Nutrient Chemistry’, da NOAA, e faça uma lista dos nutrientes citados.",
-    "source": {"title":"NOAA · Nutrient Chemistry", "url":"https://www.ecofoci.noaa.gov/cruiseWeb/ice08/Ice2008_nutrient.html", "locator":"Primeiro parágrafo"}
+    "id": "FIT-DINO-02",
+    "topic": "Dinoflagelados",
+    "difficulty": "Média",
+    "type": "multiple",
+    "prompt": "Em contraste com os dinoflagelados da ordem Peridiniales, as espécies da ordem Prorocentrales (como as do gênero Prorocentrum ilustradas nas Figuras 2 a 16 de Islabão & Odebrecht) possuem uma morfologia tecal característica definida por:",
+    "options": [
+      "Ausência de parede celular, apresentando apenas uma película lipídica flexível e dois flagelos anteriores.",
+      "Frústula dividida em hipocone e epicone por um cíngulo escavado com espinhos antiapicais divergentes.",
+      "Teca dividida verticalmente em duas valvas principais (direita e esquerda), desprovidas de cíngulo e sulco evidentes, com área periflagelar apical.",
+      "Presença de placas cocólitas calcárias dispostas radialmente em torno de um poro central."
+    ],
+    "answer": 2,
+    "explanation": "A ordem Prorocentrales caracteriza-se por células desprovidas dos sulcos cingular e longitudinal típicos de Peridiniales; sua teca de celulose é dividida em duas grandes valvas simétricas ou assimétricas, com flagelos inseridos em uma pequena área periflagelar anterior, frequentemente ornada por um processo ou espinho apical.",
+    "reading": "Artigo 'Dinoflagelados do microplâncton na plataforma continental e talude do extremo sul do Brasil' (Biota Neotropica, 2011).",
+    "source": {
+      "title": "Biota Neotropica (Islabão & Odebrecht, 2011)",
+      "locator": "Seção: Introdução e descrição de Prorocentrales, p. 154-156, Figuras 2-16"
+    }
   },
   {
-    "id": "demo-005", "type": "multiple", "topic": "Florações", "difficulty": "Intermediária",
-    "prompt": "Por que ‘maré vermelha’ pode ser um nome impreciso para uma floração de algas nocivas?",
-    "options": ["Porque a coloração vermelha não está presente em toda floração nociva", "Porque o fenômeno ocorre apenas em rios", "Porque depende sempre das fases da Lua", "Porque é causado exclusivamente por sedimentos"], "answer": 0,
-    "explanation": "‘Floração de algas nocivas’ descreve o fenômeno com mais precisão: a água nem sempre fica vermelha e as consequências dependem dos organismos envolvidos.",
-    "reading": "Releia ‘What is a red tide?’, da NOAA, e diferencie o nome popular do termo técnico.",
-    "source": {"title":"NOAA · What is a red tide?", "url":"https://oceanservice.noaa.gov/facts/redtide.html", "locator":"Definição"}
+    "id": "FIT-CIANO-01",
+    "topic": "Cianobactérias",
+    "difficulty": "Fácil",
+    "type": "multiple",
+    "prompt": "Ao inspecionar uma amostra de cianobactérias filamentosas ao microscópio óptico (conforme ilustrado nas pranchas do Manual da CETESB e no Atlas do Instituto de Botânica), observa-se uma célula especializada, volumosa, de parede celular espessa e citoplasma refringente, intercalar ou terminal, sem pigmentos fotossintéticos ativos. Essa estrutura é o:",
+    "options": [
+      "Aerótopo",
+      "Acineto",
+      "Heterocisto",
+      "Necrídio"
+    ],
+    "answer": 2,
+    "explanation": "O heterocisto (ou heterócito) é a célula especializada diferenciada para a fixação biológica do nitrogênio gasoso (N2), mantendo um ambiente microaeróbio essencial para o funcionamento da enzima nitrogenase, graças à sua parede espessa e à ausência de fotossistema II.",
+    "reading": "Manual de Cianobactérias Planctônicas (CETESB, 2013) e Atlas de Cianobactérias (Instituto de Botânica, 2019).",
+    "source": {
+      "title": "Manual CETESB / Atlas IBT",
+      "locator": "Glossário / Ordem Nostocales"
+    }
   },
   {
-    "id": "demo-006", "type": "multiple", "topic": "Nutrientes", "difficulty": "Intermediária",
-    "prompt": "O que é ressurgência no contexto da produtividade costeira?",
-    "options": ["Ascensão de águas mais profundas, frias e ricas em nutrientes", "Queda de sedimentos da atmosfera sobre a praia", "Migração sazonal exclusiva de zooplâncton", "Aumento do nível do mar por marés astronômicas"], "answer": 0,
-    "explanation": "A ressurgência leva águas profundas ricas em nutrientes em direção à superfície iluminada, onde podem favorecer o crescimento de fitoplâncton.",
-    "reading": "Leia ‘An Ode to Diatoms’, da NOAA, e relacione ressurgência, nutrientes e crescimento de diatomáceas.",
-    "source": {"title":"NOAA · An Ode to Diatoms", "url":"https://www.fisheries.noaa.gov/science-blog/ode-diatoms", "locator":"Trecho sobre upwelling"}
-  },
-  {
-    "id": "demo-007", "type": "multiple", "topic": "Fundamentos", "difficulty": "Intermediária",
-    "prompt": "Em qual região da coluna d’água a luz disponível favorece diretamente a fotossíntese do fitoplâncton?",
-    "options": ["Na zona iluminada ou fótica", "Somente no sedimento profundo", "Apenas abaixo da zona afótica", "Exclusivamente na interface com o fundo"], "answer": 0,
-    "explanation": "A fotossíntese depende de luz; por isso, o fitoplâncton fotossintetizante se desenvolve na porção iluminada da coluna d’água.",
-    "reading": "Revise ‘Nutrient Chemistry’, da NOAA, especialmente a menção à photic zone, e relacione luz e nutrientes.",
-    "source": {"title":"NOAA · Nutrient Chemistry", "url":"https://www.ecofoci.noaa.gov/cruiseWeb/ice08/Ice2008_nutrient.html", "locator":"Photic zone"}
-  },
-  {
-    "id": "demo-008", "type": "multiple", "topic": "Florações", "difficulty": "Intermediária",
-    "prompt": "Qual afirmação sobre florações de algas nocivas é a mais adequada?",
-    "options": ["Algumas podem produzir toxinas que afetam peixes e tornam moluscos perigosos ao consumo", "Todas produzem a mesma toxina", "Nenhuma afeta outras espécies", "São identificadas apenas pela cor da água"], "answer": 0,
-    "explanation": "Algumas florações envolvem microalgas produtoras de toxinas, com efeitos sobre organismos aquáticos e riscos associados ao consumo de moluscos contaminados.",
-    "reading": "Leia ‘What is a red tide?’, da NOAA, e identifique os efeitos apresentados para peixes e moluscos.",
-    "source": {"title":"NOAA · What is a red tide?", "url":"https://oceanservice.noaa.gov/facts/redtide.html", "locator":"Efeitos das toxinas"}
-  },
-  {
-    "id": "demo-009", "type": "multiple", "topic": "Diatomáceas", "difficulty": "Intermediária",
-    "prompt": "Qual relação explica a importância das diatomáceas em regiões costeiras produtivas?",
-    "options": ["Podem responder por parte importante da produção primária e transferir carbono à rede alimentar", "São sempre grandes predadoras de peixes", "Vivem exclusivamente fixas em rochas", "Impedem toda transferência de matéria orgânica"], "answer": 0,
-    "explanation": "A produção das diatomáceas contribui para sustentar organismos de outros níveis da rede alimentar e para a dinâmica de carbono no oceano.",
-    "reading": "Consulte o começo de ‘An Ode to Diatoms’, da NOAA, e explique a expressão ‘produção primária’ com suas palavras.",
-    "source": {"title":"NOAA · An Ode to Diatoms", "url":"https://www.fisheries.noaa.gov/science-blog/ode-diatoms", "locator":"Parágrafos iniciais"}
-  },
-  {
-    "id": "demo-010", "type": "multiple", "topic": "Fundamentos", "difficulty": "Básica",
-    "prompt": "Qual processo conecta diretamente parte do fitoplâncton à produção de oxigênio no oceano?",
-    "options": ["Fotossíntese", "Erosão costeira", "Precipitação de sal", "Maré astronômica"], "answer": 0,
-    "explanation": "Organismos fotossintetizantes, inclusive parte do plâncton oceânico, participam da produção de oxigênio ao converter energia luminosa.",
-    "reading": "Releia ‘How much oxygen comes from the ocean?’, da NOAA, e anote a participação dos organismos fotossintetizantes.",
-    "source": {"title":"NOAA · Ocean oxygen", "url":"https://oceanservice.noaa.gov/facts/ocean-oxygen.html", "locator":"Primeiro parágrafo"}
-  },
-  {
-    "id": "demo-011", "type": "open", "topic": "Fundamentos", "difficulty": "Intermediária",
-    "prompt": "Explique por que o fitoplâncton pode ser considerado uma base de muitas redes alimentares marinhas.",
-    "criteria": ["Menciona a produção primária por fotossíntese", "Explica a produção de matéria orgânica", "Relaciona essa produção à transferência para outros organismos"],
-    "model": "O fitoplâncton realiza produção primária: utiliza luz para produzir matéria orgânica. Essa matéria serve de base para o consumo por outros organismos, permitindo a transferência de matéria e energia ao longo da rede alimentar.",
-    "reading": "Revise ‘What are phytoplankton?’, da NOAA, e faça um esquema simples da passagem da produção primária aos consumidores.",
-    "source": {"title":"NOAA · What are phytoplankton?", "url":"https://oceanservice.noaa.gov/facts/phyto.html", "locator":"Visão geral"}
-  },
-  {
-    "id": "demo-012", "type": "open", "topic": "Nutrientes", "difficulty": "Intermediária",
-    "prompt": "Explique como a ressurgência pode favorecer o crescimento de diatomáceas na superfície.",
-    "criteria": ["Descreve a subida de águas profundas", "Menciona a chegada de nutrientes à superfície", "Relaciona nutrientes e crescimento de diatomáceas na região iluminada"],
-    "model": "A ressurgência leva águas profundas ricas em nutrientes para a superfície iluminada. A maior disponibilidade desses nutrientes pode favorecer o crescimento de diatomáceas e, assim, a produção primária na região.",
-    "reading": "Releia ‘An Ode to Diatoms’, da NOAA, e trace a sequência ressurgência → nutrientes → crescimento.",
-    "source": {"title":"NOAA · An Ode to Diatoms", "url":"https://www.fisheries.noaa.gov/science-blog/ode-diatoms", "locator":"Trecho sobre upwelling"}
+    "id": "FIT-CIANO-02",
+    "topic": "Cianobactérias",
+    "difficulty": "Média",
+    "type": "multiple",
+    "prompt": "Segundo o Manual de Cianobactérias Planctônicas da CETESB e as exigências da Portaria MS 2914/2011, qual é a conduta analítica mandatória quando a densidade celular de cianobactérias no ponto de captação de um manancial superficial atinge 20.000 células/mL?",
+    "options": [
+      "Aplicação imediata de sulfato de cobre em toda a bacia hidrográfica do reservatório.",
+      "Suspensão definitiva do abastecimento de água tratada para o município.",
+      "Realização obrigatória da análise semanal de cianotoxinas (com destaque para microcistinas e saxitoxinas) na água bruta.",
+      "Interrupção do monitoramento quantitativo laboratorial e adoção de inspeção visual quinzenal."
+    ],
+    "answer": 2,
+    "explanation": "De acordo com a Portaria MS 2914/2011 citada no Manual da CETESB, caso a contagem de cianobactérias no ponto de captação de água exceda 20.000 céls/mL, torna-se obrigatória a realização da análise semanal das cianotoxinas na água bruta, priorizando microcistinas e saxitoxinas.",
+    "reading": "Manual de Cianobactérias Planctônicas (CETESB, 2013), Seção 3.1: Abastecimento Público.",
+    "source": {
+      "title": "Manual de Cianobactérias Planctônicas (CETESB)",
+      "locator": "Capítulo 3: Uso dos corpos d'água e legislação, p. 23-25, Tabela 2"
+    }
   }
 ]
