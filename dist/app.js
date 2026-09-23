@@ -1,4 +1,4 @@
-/* Cantinho de Estudos da Lari: questões, biblioteca e tutor de IA */
+/* Cantinho de Estudos da Lari: questões, biblioteca e Tutor IA com Gemini */
 const DB_NAME='cantinho-da-lari-v1';
 const DB_VERSION=1;
 const $=s=>document.querySelector(s);
@@ -17,6 +17,7 @@ const state={
   openText:'',
   showModel:false,
   profile:{name:'Lari',goal:10,minutes:45,exam:''},
+  geminiKey:localStorage.getItem('lari-gemini-key')||'',
   time:{},
   db:null
 };
@@ -63,7 +64,7 @@ function fmtTime(sec){const m=Math.floor(sec/60);return m>=60?`${Math.floor(m/60
 
 function notice(){
   return state.dataset==='demo'
-    ? '<div class="demo-note"><span aria-hidden="true">◈</span><span><strong>Modo de configuração:</strong> Questões e artigos de demonstração ativos. Assim que enviar os seus PDFs e resumos, substituiremos por materiais completos.</span></div>'
+    ? '<div class="demo-note"><span aria-hidden="true">◈</span><span><strong>Modo de configuração:</strong> Questões e artigos de demonstração ativos. Os materiais completos podem ser carregados a qualquer momento.</span></div>'
     : '';
 }
 
@@ -90,8 +91,8 @@ function renderOverview(){
   <div class="overview-grid">
     <section class="feature panel">
       <p class="eyebrow">ESTUDO ATIVO</p>
-      <h2>${miss.length?'Revise um ponto que ficou em aberto.':'Consulte artigos ou resolva questões.'}</h2>
-      <p>${miss.length?`Você tem ${miss.length}${miss.length===1?'questão pendente':'questões pendentes'} no caderno de erros.`:'Acesse a Biblioteca para pesquisar por termos-chave ou tire dúvidas diretamente com o Tutor IA no canto da tela.'}</p>
+      <h2>${miss.length?'Revise um ponto que ficou em aberto.':'Consulte artigos ou converse com o Tutor IA.'}</h2>
+      <p>${miss.length?`Você tem ${miss.length}${miss.length===1?'questão pendente':'questões pendentes'} no caderno de erros.`:'Faça pesquisas na Biblioteca ou abra o chat para raciocinar e sintetizar respostas com o Tutor IA.'}</p>
       <button class="btn" data-action="${miss.length?'go-errors':'go-library'}">${miss.length?'Abrir caderno de erros':'Explorar biblioteca de artigos'} →</button>
     </section>
     <section class="goal-card panel">
@@ -105,7 +106,7 @@ function renderOverview(){
   <div class="stats-grid">
     <section class="stat panel"><span class="label">ACERTOS NA SEMANA</span><strong>${pct(correct,objWeek.length)}</strong><small>${correct} de ${objWeek.length} objetivas inéditas</small></section>
     <section class="stat panel"><span class="label">QUESTÕES FEITAS</span><strong>${first.length}</strong><small>Primeiras tentativas no total</small></section>
-    <section class="stat panel"><span class="label">ARTIGOS CADASTRADOS</span><strong>${state.articles.length}</strong><small>Disponíveis para pesquisa</small></section>
+    <section class="stat panel"><span class="label">ARTIGOS CADASTRADOS</span><strong>${state.articles.length}</strong><small>Disponíveis para pesquisa e IA</small></section>
     <section class="stat panel"><span class="label">TEMPO ATIVO</span><strong>${fmtTime(mins)}</strong><small>Página visível nesta semana</small></section>
   </div>
   <div class="split-grid">
@@ -122,7 +123,6 @@ function renderOverview(){
   </div>`;
 }
 
-/* Mecanismo da Biblioteca de Artigos */
 function filteredArticles(){
   const f=state.libraryFilter,q=f.query.trim().toLowerCase();
   return state.articles.filter(a=>{
@@ -150,7 +150,7 @@ function renderLibrary(){
   </div>
   <div class="filters-foot">
     <span>${list.length} ${list.length===1?'artigo/resumo encontrado':'artigos/resumos encontrados'}</span>
-    <span>Dica: Use palavras-chave curtas para encontrar trechos exatos</span>
+    <span>Dica: Use palavras-chave para encontrar trechos exatos</span>
   </div>
   ${list.length?`
     <div class="articles-list">
@@ -171,7 +171,6 @@ function renderLibrary(){
   `:`
     <div class="empty-state panel">
       <h2>Nenhum resultado encontrado para "${escapeHTML(state.libraryFilter.query)}".</h2>
-      <p>Tente buscar por termos mais amplos (ex: diatomáceas, sílica, teca, luz, nutrientes) ou limpe os filtros.</p>
       <button class="btn light" data-action="clear-library-filter">Limpar busca</button>
     </div>
   `}`;
@@ -211,12 +210,12 @@ function renderPractice(){
     </section>
     <aside class="context-card panel">
       <h3>Sua prática</h3>
-      <p>Questões inéditas aparecem antes de qualquer repetição. Quando você errar, a indicação de leitura fica salva no caderno.</p>
+      <p>Questões inéditas aparecem antes de repetições. Erros ficam salvos no caderno para revisão.</p>
       <div class="mini-stat"><span>Neste filtro</span><b>${pool.length}</b></div>
       <div class="mini-stat"><span>Ainda inéditas</span><b>${unseen.length}</b></div>
       <div class="mini-stat"><span>Para revisar</span><b>${unresolvedErrors().length}</b></div>
     </aside>
-  </div>`:`<div class="empty-state panel"><h2>${pool.length?'Você concluiu as questões inéditas deste filtro.':'Nenhuma questão neste filtro.'}</h2><p>Tente outro termo, assunto ou limpe os filtros.</p><button class="btn light" data-action="${pool.length?'go-errors':'clear-filter'}">${pool.length?'Revisar erros':'Limpar filtros'}</button></div>`}`;
+  </div>`:`<div class="empty-state panel"><h2>${pool.length?'Você concluiu as questões inéditas deste filtro.':'Nenhuma questão neste filtro.'}</h2><button class="btn light" data-action="${pool.length?'go-errors':'clear-filter'}">${pool.length?'Revisar erros':'Limpar filtros'}</button></div>`}`;
 }
 
 function renderMultiple(q){
@@ -231,7 +230,7 @@ function renderMultiple(q){
 
 function renderOpen(q){
   return `<textarea class="answer-box" id="open-answer" placeholder="Escreva sua resposta antes de consultar o modelo..." aria-label="Sua resposta" ${state.showModel?'readonly':''}>${escapeHTML(state.openText)}</textarea>
-  ${!state.showModel?'<div class="question-actions"><button class="btn" data-action="show-model">Comparar com o modelo</button></div>':`<div class="feedback"><h3>Resposta de referência</h3><p>${escapeHTML(q.model)}</p><p class="reading"><strong>Onde reler:</strong> ${escapeHTML(q.reading)}<br />${sourceLink(q)}</p></div>${state.submitted?'<div class="feedback"><h3>Autoavaliação salva.</h3><p>Veja a nota no histórico.</p></div><div class="question-actions"><button class="btn" data-action="next">Próxima questão →</button></div>':`<div class="model-box"><strong>Autoavaliação</strong><p>Marque apenas os pontos explicados corretamente:</p><div class="self-check">${q.criteria.map((c,i)=>`<label><input type="checkbox" data-criterion="${i}" /><span>${escapeHTML(c)}</span></label>`).join('')}</div><strong id="self-score">0 de 10 pontos</strong></div><div class="question-actions"><button class="btn" data-action="save-open">Salvar autoavaliação</button></div>`}`}`;
+  ${!state.showModel?'<div class="question-actions"><button class="btn" data-action="show-model">Comparar com o modelo</button></div>':`<div class="feedback"><h3>Resposta de referência</h3><p>${escapeHTML(q.model)}</p><p class="reading"><strong>Onde reler:</strong> ${escapeHTML(q.reading)}<br />${sourceLink(q)}</p></div>${state.submitted?'<div class="feedback"><h3>Autoavaliação salva.</h3><p>Veja a nota no histórico.</p></div><div class="question-actions"><button class="btn" data-action="next">Próxima questão →</button></div>':`<div class="model-box"><strong>Autoavaliação</strong><p>Marque os pontos explicados corretamente:</p><div class="self-check">${q.criteria.map((c,i)=>`<label><input type="checkbox" data-criterion="${i}" /><span>${escapeHTML(c)}</span></label>`).join('')}</div><strong id="self-score">0 de 10 pontos</strong></div><div class="question-actions"><button class="btn" data-action="save-open">Salvar autoavaliação</button></div>`}`}`;
 }
 
 function feedback(q,correct){
@@ -241,7 +240,7 @@ function feedback(q,correct){
 function renderErrors(){
   const errors=unresolvedErrors();
   return `${header('Caderno de erros','Cada item guarda a explicação e o caminho de leitura.')}${notice()}
-  ${errors.length?`<div class="panel section-panel"><div class="section-head"><h2>${errors.length}${errors.length===1?'questão pendente':'questões pendentes'}</h2><span class="badge warm">Revisão dirigida</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Questão</th><th>Onde reler</th><th>Última tentativa</th><th></th></tr></thead><tbody>${errors.map(({question:q,attempt:a})=>`<tr><td><strong>${escapeHTML(q.prompt)}</strong><small>${escapeHTML(q.topic)} · ${escapeHTML(q.id)}</small></td><td>${escapeHTML(q.reading||'Consulte a explicação.')}</td><td>${fmtDate(a.at)}</td><td><button class="btn light" data-action="retry" data-id="${escapeHTML(q.id)}">Refazer</button></td></tr>`).join('')}</tbody></table></div></div>`:`<div class="empty-state panel"><h2>Nenhuma questão pendente de revisão.</h2><p>Quando você errar uma questão, ela aparecerá aqui.</p><button class="btn" data-action="start">Resolver questões</button></div>`}`;
+  ${errors.length?`<div class="panel section-panel"><div class="section-head"><h2>${errors.length}${errors.length===1?'questão pendente':'questões pendentes'}</h2><span class="badge warm">Revisão dirigida</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Questão</th><th>Onde reler</th><th>Última tentativa</th><th></th></tr></thead><tbody>${errors.map(({question:q,attempt:a})=>`<tr><td><strong>${escapeHTML(q.prompt)}</strong><small>${escapeHTML(q.topic)} · ${escapeHTML(q.id)}</small></td><td>${escapeHTML(q.reading||'Consulte a explicação.')}</td><td>${fmtDate(a.at)}</td><td><button class="btn light" data-action="retry" data-id="${escapeHTML(q.id)}">Refazer</button></td></tr>`).join('')}</tbody></table></div></div>`:`<div class="empty-state panel"><h2>Nenhuma questão pendente de revisão.</h2><button class="btn" data-action="start">Resolver questões</button></div>`}`;
 }
 
 function renderResults(){
@@ -270,7 +269,7 @@ function renderHistory(){
 }
 
 function renderSettings(){
-  return `${header('Meu plano e dados','Ajuste sua meta e gerencie os backups.')}${notice()}
+  return `${header('Meu plano e dados','Ajuste sua meta e configure a inteligência do Tutor IA.')}${notice()}
   <div class="settings-grid">
     <section class="panel">
       <h2>Plano de estudo</h2>
@@ -281,8 +280,17 @@ function renderSettings(){
       <button class="btn" data-action="save-profile">Salvar plano</button>
     </section>
     <section class="panel">
+      <h2>Inteligência Artificial (Google Gemini)</h2>
+      <p>Ligue o Tutor IA aos artigos com raciocínio e síntese em tempo real.</p>
+      <div class="form-row">
+        <label for="gemini-key-input">Chave de API do Gemini (Google AI Studio)</label>
+        <input class="field" id="gemini-key-input" type="password" placeholder="Cole sua chave AIzaSy..." value="${escapeHTML(state.geminiKey)}" />
+        <small class="small-print">Esta chave fica guardada exclusivamente neste navegador. É 100% segura e nunca será enviada para o GitHub.</small>
+      </div>
+      <button class="btn" data-action="save-key">Ativar IA no Tutor</button>
+      <hr style="border:0;border-top:1px solid #e2e8f0;margin:24px 0;" />
       <h2>Conteúdo e backup</h2>
-      <p>Banco com ${state.questions.length} questões e ${state.articles.length} artigos indexados.</p>
+      <p>Banco atual: ${state.questions.length} questões e ${state.articles.length} artigos indexados.</p>
       <button class="btn light" data-action="import">Importar banco de questões (.json)</button>
       <br/><br/>
       <button class="btn ghost" data-action="export">Baixar backup do progresso</button>
@@ -345,7 +353,6 @@ function downloadBackup(){
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
-/* Interações gerais de cliques */
 document.addEventListener('click',async e=>{
   const nav=e.target.closest('[data-view]');
   if(nav){setView(nav.dataset.view);return;}
@@ -390,14 +397,20 @@ document.addEventListener('click',async e=>{
     if(action==='save-profile'){
       state.profile={name:$('#profile-name').value.trim(),goal:Number($('#profile-goal').value),minutes:Number($('#profile-minutes').value),exam:$('#profile-exam').value};
       localStorage.setItem('lari-profile',JSON.stringify(state.profile));
-      toast('Plano atualizado.');render();return;
+      toast('Plano atualizado com sucesso.');render();return;
+    }
+    if(action==='save-key'){
+      const val=$('#gemini-key-input').value.trim();
+      state.geminiKey=val;
+      localStorage.setItem('lari-gemini-key',val);
+      toast(val?'Chave ativada! Tutor IA pronto com Gemini.':'Chave removida. Tutor voltou ao modo padrão.');
+      render();return;
     }
     if(action==='export'){downloadBackup();return;}
     if(action==='import'){$('#import-input').click();return;}
   }catch(err){console.error(err);toast('Erro ao processar ação.');}
 });
 
-/* Filtros em tempo real na Biblioteca e Questões */
 document.addEventListener('input',e=>{
   if(e.target.id==='article-search'){
     state.libraryFilter.query=e.target.value;
@@ -425,42 +438,56 @@ $('#menu-toggle')?.addEventListener('click',()=>{
   $('#menu-toggle').setAttribute('aria-expanded',String(open));
 });
 
-/* Tutor de IA: Lógica da Conversa com base nos materiais */
+/* Tutor IA: Inteligência Real com Gemini API + Contexto dos Artigos */
 function appendChatMessage(text,sender='bot'){
   const box=$('#ai-widget-messages');
-  if(!box)return;
+  if(!box)return null;
   const msg=document.createElement('div');
   msg.className=`ai-bubble ai-${sender}`;
   msg.innerHTML=escapeHTML(text).replace(/\n/g,'<br />');
   box.appendChild(msg);
   box.scrollTop=box.scrollHeight;
+  return msg;
 }
 
-function answerFromTutor(query){
-  const q=query.toLowerCase().trim();
-  // Busca direta nos artigos carregados
-  const matches=state.articles.filter(a=>{
-    return a.titulo.toLowerCase().includes(q) ||
-           a.resumo.toLowerCase().includes(q) ||
-           (a.palavras_chave && a.palavras_chave.some(k=>q.includes(k.toLowerCase())||k.toLowerCase().includes(q)));
-  });
-
-  if(matches.length>0){
-    const best=matches[0];
-    return `Encontrei uma referência em "${best.titulo}" (${best.categoria}):\n\n${best.resumo}\n\nFonte: ${best.autor_fonte}`;
+async function askGemini(query){
+  if(!state.geminiKey){
+    return `Para ter respostas com raciocínio e síntese completa de IA, ative a chave gratuita do Gemini na aba "Meu plano e dados".\n\n(No momento, estou respondendo com busca textual simples dos artigos cadastrados).`;
   }
 
-  // Busca secundária nas explicações das questões
-  const questionMatch=state.questions.find(item=>{
-    return (item.explanation && item.explanation.toLowerCase().includes(q)) ||
-           (item.prompt && item.prompt.toLowerCase().includes(q));
-  });
+  const prompt = `Você é o Tutor de Fitoplâncton no site "Cantinho de Estudos da Lari".
+Sua aluna é a Lari, estudante de biologia/oceanografia.
+Responda de forma pedagógica, completa, didática e cientificamente precisa em português.
+Use prioritariamente os artigos e conceitos cadastrados abaixo como base de conhecimento, mas tenha liberdade para raciocinar, sintetizar, fazer analogias, deduções ecológicas e responder questões hipotéticas ou enunciados inventados:
 
-  if(questionMatch){
-    return `Sobre isso, veja o conceito da questão de ${questionMatch.topic}:\n\n"${questionMatch.explanation}"\n\nLeitura indicada: ${questionMatch.reading}`;
+--- BASE DE ARTIGOS CADASTRADOS ---
+${JSON.stringify(state.articles, null, 2)}
+------------------------------------
+
+Dúvida ou questão da Lari: "${query}"`;
+
+  try{
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(state.geminiKey)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }]
+      })
+    });
+
+    if(!res.ok){
+      const errData = await res.json().catch(()=>({}));
+      console.error('Gemini API Error:', errData);
+      return `Houve um erro na comunicação com a IA (${res.status}). Verifique se a sua chave do Gemini em "Meu plano e dados" está correta.`;
+    }
+
+    const data = await res.json();
+    const answer = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    return answer || 'Não obtive uma resposta detalhada. Tente reformular a pergunta!';
+  }catch(err){
+    console.error(err);
+    return 'Falha na conexão com a IA. Verifique sua conexão com a internet.';
   }
-
-  return `Não encontrei um trecho exato sobre "${query}" nos materiais de demonstração carregados.\n\nSugestão: experimente pesquisar por "frústula", "sílica", "dinoflagelados", "maré vermelha", ou envie os PDFs da matéria para indexarmos tudo aqui!`;
 }
 
 $('#ai-fab')?.addEventListener('click',()=>{
@@ -476,20 +503,25 @@ $('#ai-widget-close')?.addEventListener('click',()=>{
   w.setAttribute('aria-hidden','true');
 });
 
-$('#ai-widget-form')?.addEventListener('submit',e=>{
+$('#ai-widget-form')?.addEventListener('submit',async e=>{
   e.preventDefault();
   const input=$('#ai-widget-input');
   const txt=input.value.trim();
   if(!txt)return;
+
   appendChatMessage(txt,'user');
   input.value='';
-  setTimeout(()=>{
-    const reply=answerFromTutor(txt);
-    appendChatMessage(reply,'bot');
-  },400);
+
+  const loadingBubble = appendChatMessage('Consultando os materiais e raciocinando...','bot');
+
+  const reply = await askGemini(txt);
+  if(loadingBubble){
+    loadingBubble.innerHTML = escapeHTML(reply).replace(/\n/g,'<br />');
+    const box=$('#ai-widget-messages');
+    if(box) box.scrollTop=box.scrollHeight;
+  }
 });
 
-/* Contador de Tempo Ativo */
 let lastInteraction=Date.now(),lastTick=Date.now(),dirtySeconds=0;
 for(const name of ['pointerdown','keydown','scroll'])document.addEventListener(name,()=>{lastInteraction=Date.now();},{passive:true});
 function tick(){
@@ -502,7 +534,6 @@ function tick(){
 }
 setInterval(tick,1000);
 
-/* Inicialização */
 async function init(){
   try{
     state.db=await dbOpen();
