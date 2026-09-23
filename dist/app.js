@@ -1,4 +1,4 @@
-/* Cantinho de Estudos da Lari: IA fixada no modelo universal (1.5 Flash) */
+/* Cantinho de Estudos da Lari: IA auxiliar da Laris */
 const DB_NAME = 'cantinho-da-lari-v1';
 const DB_VERSION = 1;
 const $ = s => document.querySelector(s);
@@ -29,7 +29,7 @@ const state = {
   submitted: false,
   openText: '',
   showModel: false,
-  profile: { name: 'Lari', goal: 10, minutes: 45, exam: '' },
+  profile: { name: 'Laris', goal: 10, minutes: 45, exam: '' },
   geminiKey: localStorage.getItem('lari-gemini-key') || '',
   time: {},
   db: null
@@ -157,12 +157,12 @@ function renderOverview() {
   <div class="overview-grid">
     <section class="feature panel">
       <p class="eyebrow">ESTUDO ATIVO</p>
-      <h2>${miss.length ? 'Revise um ponto que ficou em aberto.' : 'Consulte artigos ou converse com o Tutor IA.'}</h2>
-      <p>${miss.length ? `Você tem ${miss.length}${miss.length === 1 ? 'questão pendente' : 'questões pendentes'} no caderno de erros.` : 'Faça pesquisas na Biblioteca ou abra o chat para tirar dúvidas com o Tutor IA.'}</p>
+      <h2>${miss.length ? 'Revise um ponto que ficou em aberto.' : 'Consulte artigos ou converse com a IA auxiliar da Laris.'}</h2>
+      <p>${miss.length ? `Você tem ${miss.length}${miss.length === 1 ? 'questão pendente' : 'questões pendentes'} no caderno de erros.` : 'Faça pesquisas na Biblioteca ou abra o chat para tirar dúvidas com a IA auxiliar da Laris.'}</p>
       <button class="btn" data-action="${miss.length ? 'go-errors' : 'go-library'}">${miss.length ? 'Abrir caderno de erros' : 'Explorar biblioteca de artigos'} →</button>
     </section>
     <section class="goal-card panel">
-      <div class="card-top"><span class="label">META DA SEMANA</span><span class="badge">${Math.min(100, Math.round(week.length / goal * 100))}%</span></div>
+      <div class="card-top"><span class="label">META DA SEMANA</span><span class="badge gold">${Math.min(100, Math.round(week.length / goal * 100))}%</span></div>
       <h2>${week.length}<span> / ${goal} questões</span></h2>
       <p>Primeiras tentativas nesta semana</p>
       <div class="progress-track"><i style="width:${Math.min(100, week.length / goal * 100)}%"></i></div>
@@ -355,8 +355,13 @@ function renderResults() {
     <section class="stat panel"><span class="label">TEMPO REGISTRADO</span><strong>${fmtTime(totalTime)}</strong><small>Tempo ativo</small></section>
   </div>
   <div class="split-grid">
-    <section class="section-panel panel"><div class="section-head"><h2>Acertos por assunto</h2><span class="label">OBJETIVAS</span></div>${topicRows || '<p class="empty-message">Ainda não há respostas.</p>'}</section>
-    <section class="section-panel panel"><div class="section-head"><h2>Últimos 7 dias</h2><span class="label">INÉDITAS</span></div><div class="trend">${trendHtml}</div></section>
+    <section class="section-panel panel">
+      <div class="section-head"><h2>Acertos por assunto</h2><span class="label">OBJETIVAS</span></div>
+      ${topicRows || '<p class="empty-message">Ainda não há respostas.</p>'}</section>
+    <section class="section-panel panel">
+      <div class="section-head"><h2>Últimos 7 dias</h2><span class="label">INÉDITAS</span></div>
+      <div class="trend">${trendHtml}</div>
+    </section>
   </div>`;
 }
 
@@ -379,7 +384,7 @@ function renderHistory() {
 function renderSettings() {
   const qs = Array.isArray(state.questions) ? state.questions : [];
   const arts = Array.isArray(state.articles) ? state.articles : [];
-  return `${header('Meu plano e dados', 'Ajuste sua meta e configure a inteligência do Tutor IA.')}${notice()}
+  return `${header('Meu plano e dados', 'Ajuste sua meta e configure a inteligência da IA auxiliar da Laris.')}${notice()}
   <div class="settings-grid">
     <section class="panel">
       <h2>Plano de estudo</h2>
@@ -391,13 +396,13 @@ function renderSettings() {
     </section>
     <section class="panel">
       <h2>Inteligência Artificial (Google Gemini)</h2>
-      <p>Ligue o Tutor IA aos artigos com raciocínio e síntese em tempo real.</p>
+      <p>Ligue a IA auxiliar da Laris aos artigos com raciocínio e síntese em tempo real.</p>
       <div class="form-row">
         <label for="gemini-key-input">Chave de API do Gemini (Google AI Studio)</label>
         <input class="field" id="gemini-key-input" type="password" placeholder="Cole sua chave AIzaSy..." value="${escapeHTML(state.geminiKey)}" />
         <small class="small-print">Esta chave fica salva exclusivamente no seu navegador. É 100% segura e nunca é enviada ao GitHub.</small>
       </div>
-      <button class="btn" data-action="save-key">Ativar IA no Tutor</button>
+      <button class="btn" data-action="save-key">Ativar IA auxiliar</button>
       <hr style="border:0;border-top:1px solid #e2e8f0;margin:24px 0;" />
       <h2>Conteúdo e backup</h2>
       <p>Banco atual: ${qs.length} questões e ${arts.length} artigos indexados.</p>
@@ -500,7 +505,7 @@ document.addEventListener('click', async e => {
     }
     if (action === 'save-profile') {
       const nameIn = $('#profile-name'), goalIn = $('#profile-goal'), minIn = $('#profile-minutes'), examIn = $('#profile-exam');
-      state.profile = { name: nameIn ? nameIn.value.trim() : 'Lari', goal: Number(goalIn?.value || 10), minutes: Number(minIn?.value || 45), exam: examIn ? examIn.value : '' };
+      state.profile = { name: nameIn ? nameIn.value.trim() : 'Laris', goal: Number(goalIn?.value || 10), minutes: Number(minIn?.value || 45), exam: examIn ? examIn.value : '' };
       localStorage.setItem('lari-profile', JSON.stringify(state.profile));
       toast('Plano atualizado com sucesso.'); render(); return;
     }
@@ -509,7 +514,7 @@ document.addEventListener('click', async e => {
       const val = input ? input.value.trim() : '';
       state.geminiKey = val;
       localStorage.setItem('lari-gemini-key', val);
-      toast(val ? 'Chave ativada! Tutor IA conectado com sucesso.' : 'Chave removida.');
+      toast(val ? 'Chave ativada! IA auxiliar da Laris conectada com sucesso.' : 'Chave removida.');
       render(); return;
     }
     if (action === 'export') {
@@ -572,41 +577,55 @@ function appendChatMessage(text, sender = 'bot') {
   return msg;
 }
 
-/* API simplificada e direta para o modelo gemini-1.5-flash */
+/* Identificação dinâmica e motor de resposta da IA Auxiliar da Laris */
 async function askGemini(query) {
-  if (!state.geminiKey) {
+  const key = (state.geminiKey || '').trim();
+  if (!key) {
     return 'Para ter respostas com raciocínio e síntese completa de IA, ative a chave gratuita do Gemini na aba "Meu plano e dados".';
   }
 
-  const prompt = `Você é o Tutor de Fitoplâncton no site "Cantinho de Estudos da Lari".
-Sua aluna é a Lari, estudante de biologia/oceanografia.
-Responda de forma pedagógica, completa, didática e cientificamente correta em português.
-Use prioritariamente os artigos abaixo, mas raciocine, sintetize e responda perguntas hipotéticas ou enunciados inventados:
+  const prompt = `Você é a IA auxiliar da Laris no site "Cantinho de Estudos da Lari".
+Sua aluna é a Laris, estudante de biologia/oceanografia.
+Responda de forma pedagógica, encorajadora, didática e cientificamente precisa em português.
+Use prioritariamente os artigos e materiais cadastrados abaixo como base de conhecimento, mas raciocine, sintetize e responda com clareza qualquer pergunta teórica ou aplicada:
 
 --- BASE DE ARTIGOS ---
 ${JSON.stringify(state.articles || [], null, 2)}
 -----------------------
 
-Dúvida ou questão da Lari: "${query}"`;
+Dúvida ou questão da Laris: "${query}"`;
+
+  let activeModel = 'gemini-1.5-flash';
+  try {
+    const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(key)}`);
+    if (listRes.ok) {
+      const listData = await listRes.json();
+      const valid = (listData.models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent'));
+      const flash = valid.find(m => m.name && m.name.toLowerCase().includes('flash'));
+      const chosen = flash || valid[0];
+      if (chosen && chosen.name) {
+        activeModel = chosen.name.replace(/^models\//, '');
+      }
+    }
+  } catch (e) {}
 
   try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(state.geminiKey)}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${activeModel}:generateContent?key=${encodeURIComponent(key)}`;
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }] })
     });
 
-    if (!res.ok) {
-      console.error('Falha na API da Google. Status:', res.status);
-      return `Erro ${res.status}: O Google recusou a ligação com esta chave. Tente gerar uma nova chave no AI Studio certificando-se de que a API "Generative Language" está ativa no projeto.`;
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) {
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui formular uma resposta no momento. Tente reformular a pergunta.';
+    } else {
+      const apiErr = data.error?.message || `Erro HTTP ${res.status}`;
+      return `Erro na IA auxiliar (${activeModel}): ${apiErr}`;
     }
-    
-    const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Não consegui formular uma resposta detalhada. Tente reformular a pergunta.';
-  } catch (e) {
-    console.error('Erro de rede:', e);
-    return 'Falha de conexão com a IA. Verifique a sua internet ou desative bloqueadores de anúncios (AdBlock) para este site.';
+  } catch (err) {
+    return 'Falha de conexão com os servidores da IA. Verifique sua internet.';
   }
 }
 
